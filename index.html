@@ -41,6 +41,9 @@
 
   --script:  "Pinyon Script", "Snell Roundhand", cursive;
   --edge: rgba(59,58,50,.14);
+  --frame: rgba(59,58,50,.24);        /* moldura hairline */
+  --panel: #edf0e6;                   /* painel — sussurro de sálvia, coeso com o rodapé */
+  --lat:   rgba(107,125,85,.13);      /* linha do losango, sálvia bem discreta */
   /* Sombra em camadas — profundidade natural que se adapta ao fundo */
   --shadow:
     0 1px 1px rgba(51,50,44,.04),
@@ -97,10 +100,10 @@ body::before{
   position:fixed; inset:0;
   pointer-events:none; z-index:0;
   background:
-    radial-gradient(95% 52% at 50% -8%, rgba(183,208,212,.55), transparent 62%),  /* céu aquarela no topo */
-    radial-gradient(66% 40% at 10% 6%,  rgba(154,171,140,.30), transparent 60%),  /* folhagem esquerda */
-    radial-gradient(72% 42% at 94% 16%, rgba(154,171,140,.24), transparent 60%),  /* folhagem direita */
-    radial-gradient(130% 85% at 50% 110%, rgba(107,125,85,.14), transparent 55%); /* base verde */
+    radial-gradient(95% 50% at 50% -8%, rgba(183,208,212,.48), transparent 62%),  /* céu aquarela no topo */
+    radial-gradient(60% 36% at 8% 5%,   rgba(154,171,140,.18), transparent 60%),  /* folhagem esquerda */
+    radial-gradient(66% 38% at 96% 14%, rgba(154,171,140,.14), transparent 60%),  /* folhagem direita */
+    radial-gradient(130% 85% at 50% 112%, rgba(107,125,85,.09), transparent 55%); /* base verde */
 }
 /* Grão de papel */
 body::after{
@@ -240,13 +243,13 @@ h3{ font-size:var(--fs-h3); }
   text-align:left;
   background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.32));
   border:1px solid var(--edge);
-  border-radius:3px;
+  border-radius:6px;
   box-shadow:var(--shadow);
   position:relative;
   overflow:hidden;
 }
 .ticket::before{
-  content:""; position:absolute; inset:9px; border:1px solid var(--edge); border-radius:2px; pointer-events:none;
+  content:""; position:absolute; inset:9px; border:1px solid var(--edge); border-radius:3px; pointer-events:none;
 }
 .ticket-row{
   display:flex; align-items:center; gap:18px;
@@ -304,6 +307,14 @@ h3{ font-size:var(--fs-h3); }
 .rsvp h2{ margin-bottom:.4em; }
 .rsvp .intro-p{ max-width:34ch; margin:0 auto 36px; }
 form{ text-align:left; }
+/* Formulário como carta/painel — profundidade */
+.rsvp form{
+  background:rgba(255,255,255,.42);
+  border:1px solid var(--edge);
+  border-radius:14px;
+  padding:clamp(22px,6vw,30px) clamp(18px,5vw,24px);
+  box-shadow:var(--shadow);
+}
 
 form{ display:flex; flex-direction:column; gap:22px; }
 .field{ display:flex; flex-direction:column; gap:8px; }
@@ -434,12 +445,12 @@ form{ display:flex; flex-direction:column; gap:22px; }
    RODAPÉ / FECHAMENTO
    ============================================================ */
 footer{ text-align:center; padding:60px 22px 70px; }
-footer .cat{ width:60px; height:60px; color:var(--sage); margin-bottom:16px; opacity:.85; }
-footer .quote{ max-width:24ch; margin:0 auto 18px; }
-footer .sig{ display:block; }
+footer .cat{ width:60px; height:60px; color:#b9c79c; margin-bottom:16px; opacity:.9; }
+footer .quote{ max-width:24ch; margin:0 auto 18px; color:#eef1e6; }
+footer .sig{ display:block; color:#c3cfa4; }
 footer .end-chapter{
   font-family:var(--serif); font-style:italic;
-  font-size:.86rem; color:var(--ink-soft); opacity:.72;
+  font-size:.86rem; color:rgba(238,241,230,.68);
   margin:0 auto 16px;
 }
 
@@ -448,7 +459,7 @@ footer .end-chapter{
    ============================================================ */
 /* Marcador de capítulo — cor/escala vêm do sistema (.eyebrow); aqui só posição */
 .chapter{ display:block; text-align:center; margin-bottom:16px; }
-.chapter::before{ content:"❦"; display:inline-block; margin-right:.85em; letter-spacing:0; opacity:.7; }
+.chapter::before{ content:"◇"; display:inline-block; margin-right:.7em; font-size:.9em; opacity:.75; letter-spacing:0; }
 .hero .chapter{ margin-bottom:22px; }
 
 /* Nota manuscrita antes do bilhete */
@@ -466,6 +477,49 @@ footer .end-chapter{
   text-wrap:balance;
 }
 .turn .soft{ display:block; margin-top:.55em; color:var(--sage-deep); }
+
+/* ============================================================
+   ESTRUTURA — moldura, superfícies e motivos de baralho
+   ============================================================ */
+
+/* Moldura hairline fixa — emoldura toda a experiência (ref. convite premium) */
+.frame{ position:fixed; inset:11px; z-index:40; pointer-events:none; border:1px solid var(--frame); }
+.frame::before{ content:""; position:absolute; inset:4px; border:1px solid var(--frame); opacity:.45; }
+.fc{ position:absolute; width:7px; height:7px; background:var(--frame); transform:rotate(45deg); } /* losango nos cantos */
+.fc.tl{ top:-4px; left:-4px; } .fc.tr{ top:-4px; right:-4px; }
+.fc.bl{ bottom:-4px; left:-4px; } .fc.br{ bottom:-4px; right:-4px; }
+@media (max-width:400px){ .frame{ inset:8px; } }
+
+/* Superfícies full-bleed — cada seção-painel com aresta hairline nítida */
+section, .surface{ position:relative; }
+.surface::before{
+  content:""; position:absolute; z-index:-1; top:0; bottom:0;
+  left:50%; transform:translateX(-50%); width:100vw;
+  border-top:1px solid var(--edge); border-bottom:1px solid var(--edge);
+}
+/* Painéis — sussurro de sálvia, coeso e tom-sobre-tom */
+.surface-panel::before{ background:var(--panel); }
+/* Interlúdio — mesmo painel com losango levíssimo (o xadrez de Wonderland, discreto) */
+.surface-lattice::before{
+  background:
+    repeating-linear-gradient(45deg,  var(--lat) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(-45deg, var(--lat) 0 1px, transparent 1px 52px),
+    var(--panel);
+}
+
+/* Hairline full-bleed no topo das seções de papel (divisão nítida, ref. ledger) */
+.intro::before, .details::before, .rsvp::before{
+  content:""; position:absolute; z-index:-1; top:0; left:50%; transform:translateX(-50%);
+  width:100vw; height:1px; background:var(--edge);
+}
+/* Rodapé — painel verde sólido com losango levíssimo */
+.surface-green::before{
+  border-color:transparent;
+  background:
+    repeating-linear-gradient(45deg,  rgba(255,255,255,.05) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.05) 0 1px, transparent 1px 42px),
+    linear-gradient(180deg, #55692f, #47591f);
+}
 
 /* ============================================================
    ENTRADAS ESCALONADAS (split & stagger ao revelar)
@@ -511,6 +565,7 @@ footer .end-chapter{
 <body>
 
 <div id="petals" aria-hidden="true"></div>
+<div class="frame" aria-hidden="true"><i class="fc tl"></i><i class="fc tr"></i><i class="fc bl"></i><i class="fc br"></i></div>
 
 <div class="wrap">
 <main>
@@ -567,7 +622,7 @@ footer .end-chapter{
   </section>
 
   <!-- ===================== INTERLÚDIO (a virada) ===================== -->
-  <section class="turn reveal">
+  <section class="turn reveal surface surface-lattice">
     <p>Você chegou até aqui. O que significa que o coelho te escolheu.<span class="soft">Agora só falta aparecer.</span></p>
   </section>
 
@@ -614,7 +669,7 @@ footer .end-chapter{
   </section>
 
   <!-- ===================== PRESENTE ===================== -->
-  <section class="gift reveal">
+  <section class="gift reveal surface surface-panel">
     <p class="chapter">Capítulo IV</p>
     <h2>Um mimo para Alice</h2>
     <p class="lead">A Alice vai chegar com muito sono, muito apetite e a curiosidade de quem ainda tem tudo por descobrir. Se quiser trazer algo para a jornada dela:</p>
@@ -684,7 +739,7 @@ footer .end-chapter{
   </section>
 
   <!-- ===================== RODAPÉ ===================== -->
-  <footer class="reveal">
+  <footer class="reveal surface surface-green">
     <svg class="cat" viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <path d="M12 34c0-8 9-14 20-14s20 6 20 14-9 12-20 12S12 42 12 34z" stroke="currentColor" stroke-width="1.4"/>
       <path d="M18 30c2 3 5 4 5 4M46 30c-2 3-5 4-5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
