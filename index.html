@@ -32,6 +32,11 @@
   @keyframes glow { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
   input::placeholder, textarea::placeholder { color: rgba(247,244,213,.4); }
   input:focus, textarea:focus { border-color: var(--rose) !important; }
+  @keyframes float-illus { 0%,100%{transform:translateY(0) rotate(var(--ir,0deg))} 60%{transform:translateY(-8px) rotate(var(--ir,0deg))} }
+  @keyframes drift-illus { 0%,100%{transform:translateY(0) rotate(var(--ir,0deg))} 45%{transform:translateY(-5px) translateX(3px) rotate(var(--ir,0deg))} }
+  .illus { position:absolute; pointer-events:none; user-select:none; -webkit-user-select:none; }
+  .illus-d { mix-blend-mode:screen; }
+  .illus-l { mix-blend-mode:multiply; }
 </style>
 </helmet>
 
@@ -42,6 +47,8 @@
 <!-- ============ HERO ============ -->
 <section data-screen-label="Hero" style="background:var(--ink); color:var(--paper); padding:60px 34px 52px; text-align:center; position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center;">
   <div style="position:absolute; inset:14px; border:1px solid rgba(247,244,213,.16); pointer-events:none;"></div>
+  <img class="illus illus-d" src="./assets/dark-bg/chapeu.png" style="right:-55px; top:-14px; width:252px; opacity:.54; --ir:11deg; animation:float-illus 8s ease-in-out infinite;" alt="">
+  <img class="illus illus-d" src="./assets/dark-bg/relogio.png" style="left:-22px; bottom:58px; width:138px; opacity:.34; --ir:-6deg; animation:float-illus 11s ease-in-out infinite 3s;" alt="">
   <div style="position:relative;">
     <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.38em; font-size:10.5px; color:var(--moss); margin-bottom:26px;">André &amp; Camila convidam</div>
 
@@ -69,7 +76,9 @@
 </section>
 
 <!-- ============ CAP I — O CONVITE ============ -->
-<section data-screen-label="Capítulo I" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center;">
+<section data-screen-label="Capítulo I" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
+  <img class="illus illus-l" src="./assets/beige-bg/flores.png" style="left:-58px; bottom:-52px; width:224px; opacity:.48; --ir:54deg; animation:float-illus 15s ease-in-out infinite;" alt="">
+  <img class="illus illus-l" src="./assets/beige-bg/flores.png" style="right:-26px; top:10px; width:162px; opacity:.34; --ir:-12deg; animation:float-illus 12s ease-in-out infinite;" alt="">
   <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo I</div>
   <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">O Convite</h2>
 
@@ -79,17 +88,17 @@
     <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
   </div>
 
-  <div style="width:158px; height:158px; margin:0 auto 30px; border-radius:50%; overflow:hidden; border:1px solid var(--moss); box-shadow:0 10px 26px rgba(10,51,35,.18); position:relative;">
-    <div style="position:absolute; inset:5px; border-radius:50%; border:1px solid rgba(131,153,88,.5); z-index:2; pointer-events:none;"></div>
-    <image-slot id="illus-convite" shape="rect" style="width:100%; height:100%; display:block;" placeholder="ilustração do coelho branco"></image-slot>
-  </div>
+  <img src="./assets/beige-bg/coelho.png" style="width:172px; mix-blend-mode:multiply; display:block; margin:0 auto 26px;" alt="">
 
   <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 16px; text-wrap:pretty;">Nem sempre sabemos quando uma história começa. Às vezes ela começa com um sorriso na tela de um ultrassom; às vezes, com um nome sussurrado entre dois. O nome dela é <em style="font-style:italic; color:var(--ink);">Alice</em>.</p>
   <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto; text-wrap:pretty;">Ela ainda não chegou, mas já mudou tudo. Este é um convite para você, que faz parte do mundo que ela vai conhecer: queremos você aqui quando ela der os primeiros passos nessa aventura. Traga seu sorriso mais bonito e um bocadinho de imaginação. No País das Maravilhas, tudo pode acontecer.</p>
 </section>
 
 <!-- ============ CAP II — O CHÁ (detalhes + contagem) ============ -->
-<section data-screen-label="Capítulo II" style="background-color:var(--ink); background-image:repeating-linear-gradient(45deg, rgba(247,244,213,.05) 0 1px, transparent 1px 26px), repeating-linear-gradient(-45deg, rgba(247,244,213,.05) 0 1px, transparent 1px 26px); color:var(--paper); padding:56px 36px 52px; text-align:center; position:relative; min-height:85vh; display:flex; flex-direction:column; justify-content:center;">
+<section data-screen-label="Capítulo II" style="background-color:var(--ink); background-image:repeating-linear-gradient(45deg, rgba(247,244,213,.05) 0 1px, transparent 1px 26px), repeating-linear-gradient(-45deg, rgba(247,244,213,.05) 0 1px, transparent 1px 26px); color:var(--paper); padding:56px 36px 52px; text-align:center; position:relative; min-height:85vh; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+  <img class="illus illus-d" src="./assets/dark-bg/bule.png" style="left:-30px; top:-10px; width:162px; opacity:.46; --ir:-14deg; animation:float-illus 9.5s ease-in-out infinite .5s;" alt="">
+  <img class="illus illus-d" src="./assets/dark-bg/xicara.png" style="right:-22px; top:24px; width:144px; opacity:.44; --ir:12deg; animation:float-illus 8.5s ease-in-out infinite 3.5s;" alt="">
+  <img class="illus illus-d" src="./assets/dark-bg/flores.png" style="right:-48px; bottom:-44px; width:196px; opacity:.34; --ir:-56deg; animation:float-illus 14s ease-in-out infinite 6s;" alt="">
   <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-bright); line-height:1; margin-bottom:10px;">Capítulo II</div>
   <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--paper);">O Chá</h2>
 
@@ -138,7 +147,8 @@
 </section>
 
 <!-- ============ CAP III — PRESENTES ============ -->
-<section data-screen-label="Capítulo III" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center;">
+<section data-screen-label="Capítulo III" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
+  <img class="illus illus-l" src="./assets/beige-bg/chapeu.png" style="right:-30px; top:8px; width:152px; opacity:.35; --ir:8deg; animation:float-illus 10s ease-in-out infinite;" alt="">
   <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo III</div>
   <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">Lembrancinhas</h2>
 
@@ -148,9 +158,10 @@
     <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
   </div>
 
-  <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 34px; text-wrap:pretty;">A mesa do Chapeleiro estava sempre posta, e cada convidado chegava com algo nas mãos. A da Alice segue a mesma tradição: para deixá-la digna de uma pequena rainha, contamos com o seu presente. Eis o que ela mais vai precisar:</p>
+  <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 30px; text-wrap:pretty;">A mesa do Chapeleiro estava sempre posta, e cada convidado chegava com algo nas mãos. A da Alice segue a mesma tradição: para deixá-la digna de uma pequena rainha, contamos com o seu presente. Eis o que ela mais vai precisar:</p>
 
   <div style="max-width:300px; margin:0 auto;">
+    <img src="./assets/beige-bg/fralda.png" style="width:74px; mix-blend-mode:multiply; opacity:.76; display:block; margin:0 auto 10px;" alt="">
     <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.3em; font-size:10.5px; color:var(--moss); margin-bottom:6px;">Sugestão</div>
     <div style="font-family:var(--display); font-size:27px; color:var(--ink); line-height:1.25;">Fraldas M e G</div>
     <div style="font-family:'EB Garamond'; font-style:italic; font-size:15px; color:#6b5d55; margin-top:4px;">Pampers ou Huggies (ela aceita os dois)</div>
@@ -161,6 +172,7 @@
       <span style="height:1px; width:30px; background:currentColor; opacity:.5;"></span>
     </div>
 
+    <img src="./assets/beige-bg/presente.png" style="width:74px; mix-blend-mode:multiply; opacity:.76; display:block; margin:0 auto 10px;" alt="">
     <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.3em; font-size:10.5px; color:var(--moss); margin-bottom:6px;">E também</div>
     <div style="font-family:var(--display); font-size:27px; color:var(--ink); line-height:1.25;">Uma lembrancinha</div>
     <div style="font-family:'EB Garamond'; font-style:italic; font-size:15px; color:#6b5d55; margin-top:4px;">aquilo que, ao ver, você pensar “ela vai amar”. Pode ser pequeno e simples; o afeto é o que pesa na bagagem.</div>
@@ -168,7 +180,9 @@
 </section>
 
 <!-- ============ CAP IV — RSVP ============ -->
-<section data-screen-label="Capítulo IV — RSVP" style="background:var(--ink); color:var(--paper); padding:56px 34px 54px; position:relative; min-height:85vh; display:flex; flex-direction:column; justify-content:center;">
+<section data-screen-label="Capítulo IV — RSVP" style="background:var(--ink); color:var(--paper); padding:56px 34px 54px; position:relative; min-height:85vh; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
+  <img class="illus illus-d" src="./assets/dark-bg/cartas.png" style="right:-20px; top:16px; width:155px; opacity:.44; --ir:5deg; animation:float-illus 9s ease-in-out infinite 1.5s;" alt="">
+  <img class="illus illus-d" src="./assets/dark-bg/chave.png" style="left:-56px; top:42%; width:96px; opacity:.4; --ir:-46deg; animation:drift-illus 14s ease-in-out infinite 3s;" alt="">
   <div style="text-align:center;">
     <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-bright); line-height:1; margin-bottom:10px;">Capítulo IV</div>
     <h2 style="font-family:var(--display); font-weight:600; font-size:38px; letter-spacing:.02em; margin:2px 0 0; color:var(--paper);">Confirme sua presença</h2>
@@ -240,10 +254,10 @@
 </section>
 
 <!-- ============ CLOSING ============ -->
-<section data-screen-label="Encerramento" style="background:var(--paper); color:var(--ink); padding:54px 36px 48px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center;">
-  <div style="width:196px; height:150px; margin:0 auto 32px; border-radius:120px 120px 14px 14px; overflow:hidden; border:1px solid var(--moss); box-shadow:0 10px 26px rgba(10,51,35,.16); position:relative;">
-    <image-slot id="illus-closing" shape="rect" style="width:100%; height:100%; display:block;" placeholder="ilustração do chá / jardim"></image-slot>
-  </div>
+<section data-screen-label="Encerramento" style="background:var(--paper); color:var(--ink); padding:54px 36px 48px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
+  <img class="illus illus-l" src="./assets/beige-bg/xicara.png" style="left:-20px; top:18px; width:116px; opacity:.4; --ir:-62deg; animation:drift-illus 10s ease-in-out infinite;" alt="">
+  <img class="illus illus-l" src="./assets/beige-bg/flores.png" style="right:-68px; bottom:-58px; width:200px; opacity:.28; --ir:-52deg; animation:float-illus 13s ease-in-out infinite 4s;" alt="">
+  <img src="./assets/beige-bg/gato.png" style="width:168px; mix-blend-mode:multiply; display:block; margin:0 auto 28px;" alt="">
 
   <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; line-height:1.7; color:#4a4038; max-width:320px; margin:0 auto 30px; text-wrap:pretty;">Toda boa história termina com um “e então ela acordou”. Esta, não: a nossa Alice não vai sonhar o País das Maravilhas, ela vai vivê-lo. E você estará lá, no primeiro capítulo.</p>
 
