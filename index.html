@@ -578,23 +578,20 @@ class Component extends DCLogic {
     this._submitting = false;
   }
   addToCalendar() {
-    const ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Cha da Alice//PT-BR', 'CALSCALE:GREGORIAN',
-      'BEGIN:VEVENT', 'UID:cha-alice-20260808@convite', 'DTSTAMP:20260101T000000Z',
-      'DTSTART:20260808T153000', 'DTEND:20260808T173000',
-      'SUMMARY:Chá de Bebê da Alice', 'LOCATION:Mansão N&N',
-      'DESCRIPTION:Um chá no País das Maravilhas. Vista sua imaginação e nos vemos lá!',
-      'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'cha-da-alice.ics';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    const c = (window.ALICE_INVITE_CONFIG && window.ALICE_INVITE_CONFIG.calendar) || {};
+    const start = c.start || '20260808T183000Z';
+    const end = c.end || '20260808T213000Z';
+    // Deeplink do Google Agenda — abre a tela de "adicionar evento" já preenchida
+    // (no desktop e no celular; oferece abrir no app do Google Agenda se instalado).
+    const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent(c.summary || 'Chá de Bebê da Alice')
+      + '&dates=' + encodeURIComponent(start + '/' + end)
+      + '&details=' + encodeURIComponent(c.description || '')
+      + '&location=' + encodeURIComponent(c.location || '');
+    // window.open cobre o caso comum; fallback pra navegação direta em navegadores
+    // internos (ex.: WhatsApp) que bloqueiam nova aba.
+    const w = window.open(url, '_blank', 'noopener');
+    if (!w) window.location.href = url;
   }
   renderVals() {
     return {

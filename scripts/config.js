@@ -18,7 +18,7 @@ window.ALICE_INVITE_CONFIG = {
     stamp: "20260101T000000Z",
     start: "20260808T183000Z",
     end: "20260808T213000Z",
-    summary: "Chá de Bebê da Alice",
+    summary: "🐰 Chá de Bebê da Alice 🍼",
     description:
       "Você está convidado(a) para o chá de bebê da Alice! Sugestão de presente: fraldas M e G (Pampers ou Huggies) + 1 mimo.",
     location: "Mansão N&N",
