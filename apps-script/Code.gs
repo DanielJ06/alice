@@ -22,7 +22,7 @@
 
 // Nome da aba onde os dados serão gravados (criada automaticamente se não existir).
 var SHEET_NAME = 'Confirmações';
-var HEADERS = ['Data/Hora', 'Nome', 'WhatsApp', 'WhatsApp (formatado)', 'Confirmações'];
+var HEADERS = ['Data/Hora', 'Nome', 'WhatsApp', 'WhatsApp (formatado)', 'Confirmações', 'Recado'];
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -49,14 +49,17 @@ function doPost(e) {
       if (!phone || !p.nome) return;
       var pretty = formatBR(phone);
 
+      var recado = String(p.recado || '').trim();
+
       if (indexByPhone[phone]) {
-        // Já existe: atualiza nome + incrementa contador de confirmações
+        // Já existe: atualiza nome + incrementa contador; preserva recado se o novo vier vazio
         var row = indexByPhone[phone];
         var count = Number(sheet.getRange(row, 5).getValue()) || 1;
-        sheet.getRange(row, 1, 1, 5).setValues([[now, p.nome, phone, pretty, count + 1]]);
+        var keepRecado = recado || String(sheet.getRange(row, 6).getValue() || '');
+        sheet.getRange(row, 1, 1, 6).setValues([[now, p.nome, phone, pretty, count + 1, keepRecado]]);
         updated++;
       } else {
-        sheet.appendRow([now, p.nome, phone, pretty, 1]);
+        sheet.appendRow([now, p.nome, phone, pretty, 1, recado]);
         indexByPhone[phone] = sheet.getLastRow();
         added++;
       }

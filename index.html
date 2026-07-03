@@ -194,8 +194,8 @@ h3{ font-size:var(--fs-h3); }
 .hero .chapter,.hero .crest,.hero h1,.hero-sub,.hero-baby{ position:relative; z-index:1; }
 
 .hero h1{
-  font-size:var(--fs-h1);
-  letter-spacing:-.01em;
+  font-size:clamp(2.5rem,10.5vw,4.4rem);
+  letter-spacing:-.01em; line-height:1.02;
   color:var(--ink);
 }
 .hero h1 .script{
@@ -458,7 +458,7 @@ footer .end-chapter{
    NARRATIVA — marcadores de capítulo, interlúdio, nota
    ============================================================ */
 /* Marcador de capítulo — cor/escala vêm do sistema (.eyebrow); aqui só posição */
-.chapter{ display:block; text-align:center; margin-bottom:16px; }
+.chapter{ display:block; text-align:center; margin-bottom:16px; letter-spacing:.16em; }
 .chapter::before{ content:"◇"; display:inline-block; margin-right:.7em; font-size:.9em; opacity:.75; letter-spacing:0; }
 .hero .chapter{ margin-bottom:22px; }
 
@@ -539,6 +539,60 @@ section, .surface{ position:relative; }
 .gift.in .gift-list li:nth-child(2){ transition-delay:.27s; }
 
 /* ============================================================
+   ELEMENTOS NARRATIVOS (roteiro)
+   ============================================================ */
+/* Hero — narração, envelope, cursiva e CTA */
+.hero-narr{ margin:24px auto 0; max-width:33ch; }
+.hero-narr p{ margin:.32em 0; font-style:italic; color:var(--ink-soft); line-height:1.5; }
+.hero-seal{ display:block; width:104px; height:auto; margin:26px auto 4px; }
+.hero-cursive{ margin:12px auto 0; max-width:30ch; font-size:.9rem; color:var(--ink-soft); }
+.cursive{ display:block; margin-top:.5em; font-family:var(--script); font-size:1.7rem; line-height:1.28; color:var(--ink); }
+.hero-cta{
+  display:inline-block; margin-top:30px; padding:15px 36px;
+  font-family:var(--serif); font-size:var(--fs-eyebrow); letter-spacing:var(--ls-eyebrow);
+  text-transform:uppercase; font-weight:600;
+  color:var(--paper); background:var(--olive); border-radius:100px; text-decoration:none;
+  box-shadow:0 2px 4px rgba(86,107,61,.18), 0 14px 26px -18px rgba(86,107,61,.85);
+  transition:transform .22s var(--ease), box-shadow .4s var(--ease);
+}
+@media (hover:hover){ .hero-cta:hover{ transform:translateY(-2px); box-shadow:0 3px 6px rgba(86,107,61,.24), 0 22px 40px -18px rgba(86,107,61,.9); } }
+.hero-cta:active{ transform:scale(.97); }
+/* eleva todo o conteúdo do hero acima da aquarela */
+.hero .chapter,.hero h1,.hero-narr,.hero-seal,.hero-cursive,.hero-cta{ position:relative; z-index:1; }
+
+/* Cap I — revelação do nome */
+.name-reveal{ text-align:center; font-family:var(--display); color:var(--ink); font-size:1.28rem; margin:1.1em auto .2em; }
+.name-reveal .script{ display:block; font-family:var(--script); color:var(--sage-deep); font-size:3.1em; line-height:1; margin-top:.04em; }
+
+/* Cap II — fecho do bilhete */
+.after-ticket{ text-align:center; font-style:italic; color:var(--ink-soft); max-width:36ch; margin:22px auto 0; }
+
+/* Cap III — pergunta do presente */
+.gift-q{ font-family:var(--display); font-style:italic; font-size:1.35rem; color:var(--ink); margin:1.5em 0 .2em; }
+
+/* Cap IV — textarea de recado e nota */
+.field textarea{
+  font-family:var(--serif); font-size:1.08rem; color:var(--ink);
+  padding:14px 16px; background:rgba(255,255,255,.45);
+  border:1px solid var(--edge); border-bottom:1.5px solid var(--sage); border-radius:3px;
+  resize:vertical; min-height:86px; width:100%;
+  transition:border-color .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
+}
+.field textarea::placeholder{ color:#a49f90; font-style:italic; }
+.field textarea:focus{ outline:none; border-bottom-color:var(--sage-deep); background:rgba(255,255,255,.72); box-shadow:0 6px 20px -14px rgba(95,122,89,.6); }
+.field label .opt{ text-transform:none; letter-spacing:0; font-weight:400; font-style:italic; font-size:.72rem; color:var(--ink-soft); margin-left:.5em; }
+.form-note{ text-align:center; font-size:.82rem; color:var(--ink-soft); font-style:italic; margin-top:6px; }
+
+/* Encerramento (rodapé verde) */
+.closing-eyebrow{ color:#c3cfa4 !important; margin-bottom:14px; }
+footer h2.closing-title{ color:#eef1e6; font-size:clamp(1.65rem,6vw,2.2rem); max-width:20ch; margin:0 auto .5em; }
+.closing-body{ color:rgba(238,241,230,.82) !important; max-width:32ch; margin:0 auto; }
+.see-you{ margin-top:18px; font-style:italic; color:#e0e7d0 !important; font-size:1.06rem; }
+footer .sig{ margin-top:24px; }
+.sig .heart{ color:#e4b1ab; font-style:normal; }
+.sig-date{ margin-top:7px; font-family:var(--serif); font-size:.74rem; letter-spacing:.3em; color:#adba8d !important; }
+
+/* ============================================================
    RESPONSIVO
    ============================================================ */
 @media (max-width:420px){
@@ -589,48 +643,47 @@ section, .surface{ position:relative; }
       </g>
     </svg>
 
-    <p class="chapter stagger d0">Capítulo I</p>
+    <p class="chapter stagger d0">Um convite</p>
 
-    <!-- Raminho botânico de traço fino -->
-    <svg class="crest stagger d1" viewBox="0 0 120 66" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M60 62V22"/>
-      <circle cx="60" cy="16" r="2.4" fill="currentColor" stroke="none"/>
-      <path d="M60 30c-9-4-16 0-21 8 9 3 17 0 21-8z"/>
-      <path d="M60 30c9-4 16 0 21 8-9 3-17 0-21-8z"/>
-      <path d="M60 42c-8-3-14 1-18 8 8 2 15-1 18-8z"/>
-      <path d="M60 42c8-3 14 1 18 8-8 2-15-1-18-8z"/>
-      <path d="M60 22c-6-4-11-2-15 4 7 2 12 0 15-4z"/>
-      <path d="M60 22c6-4 11-2 15 4-7 2-12 0-15-4z"/>
+    <h1 class="stagger d1">Siga o<br/>Coelho Branco</h1>
+
+    <div class="hero-narr stagger d2">
+      <p>Ele passou correndo bem na sua frente.</p>
+      <p>Casaco escuro, relógio dourado, orelhas brancas.</p>
+      <p>Você olhou para baixo, e ali estava: um envelope lacrado com cera vermelha.</p>
+    </div>
+
+    <!-- Envelope lacrado com selo de cera -->
+    <svg class="hero-seal stagger d3" viewBox="0 0 128 98" fill="none" aria-hidden="true">
+      <rect x="11" y="19" width="106" height="70" rx="5" fill="#f3efe3" stroke="#c4bfae" stroke-width="1.4"/>
+      <path d="M12 23 L64 59 L116 23" stroke="#c4bfae" stroke-width="1.4" fill="none" stroke-linejoin="round"/>
+      <path d="M12 87 L53 55 M116 87 L75 55" stroke="#c4bfae" stroke-width="1.2" fill="none"/>
+      <circle cx="64" cy="61" r="14" fill="#a8413f"/>
+      <circle cx="64" cy="61" r="14" fill="none" stroke="#822d2d" stroke-width="1.2"/>
+      <path d="M64 53.5l1.9 3.9 4.3.5-3.1 2.9.8 4.2-3.9-2-3.9 2 .8-4.2-3.1-2.9 4.3-.5z" fill="#cd6f6a"/>
     </svg>
 
-    <h1 class="stagger d2">
-      <span class="the">Um chá para a</span>
-      <span class="script">Alice</span>
-    </h1>
+    <p class="hero-cursive stagger d4">No verso, em letra cursiva:
+      <span class="cursive">Abra. Mas só se você acreditar em coisas impossíveis antes do café da manhã.</span>
+    </p>
 
-    <p class="hero-sub stagger d3">Uma história está prestes a começar. Em algum lugar entre o faz de conta e o verdadeiro, uma menina curiosa está a caminho.</p>
-
-    <p class="hero-baby stagger d4">O chá acontece em <b>08 de Agosto de 2026</b></p>
+    <a class="hero-cta stagger d5" href="#capitulo-1">Eu acredito</a>
   </section>
 
   <!-- ===================== INTRO ===================== -->
-  <section class="intro reveal">
-    <p class="chapter">Capítulo II</p>
-    <h2>Tudo começou com um coelho muito apressado</h2>
-    <p>Há histórias que a gente inventa, e histórias em que a gente simplesmente entra. A nossa Alice ainda está chegando, mas o País das Maravilhas nos encontrou primeiro. Antes que ela apareça, com toda a curiosidade e a bela bagunça que promete, queremos reunir as pessoas que fazem parte do nosso conto.</p>
-    <p class="quote">Às vezes acredito em até seis coisas impossíveis antes do café da manhã.<cite>A Rainha Branca · Através do Espelho</cite></p>
-  </section>
-
-  <!-- ===================== INTERLÚDIO (a virada) ===================== -->
-  <section class="turn reveal surface surface-lattice">
-    <p>Você chegou até aqui. O que significa que o coelho te escolheu.<span class="soft">Agora só falta aparecer.</span></p>
+  <section class="intro reveal" id="capitulo-1">
+    <p class="chapter">Capítulo I · A Queda</p>
+    <h2>Ela chegou de surpresa, como toda boa aventura</h2>
+    <p>Nem sempre sabemos quando uma história começa. Às vezes ela começa com um sorriso na tela de um ultrassom. Às vezes com um nome sussurrado entre dois.</p>
+    <p class="name-reveal">O nome dela é <span class="script">Alice</span></p>
+    <p>E ela ainda não chegou, mas já mudou tudo. Esta é uma carta para você, que faz parte desse mundo que ela vai conhecer. Queremos que você esteja aqui quando ela der os primeiros passos nessa aventura.</p>
   </section>
 
   <!-- ===================== DETALHES ===================== -->
   <section class="details reveal">
-    <p class="chapter">Capítulo III</p>
-    <h2>O coelho deixou um bilhete</h2>
-    <p class="note-hand">Encontramos isto preso na toca do coelho. Guarde bem.</p>
+    <p class="chapter">Capítulo II · O Jardim do Tempo</p>
+    <h2>Guarde essa data, ou o Coelho se atrasa</h2>
+    <p class="note-hand">O Coelho Branco nunca chegou atrasado por acidente. Ele sabia exatamente onde precisava estar. E agora você também sabe.</p>
     <div class="ticket">
       <div class="ticket-row">
         <div class="ticket-ic">
@@ -647,7 +700,7 @@ section, .surface{ position:relative; }
         </div>
         <div class="ticket-txt">
           <div class="lbl">Que horas</div>
-          <div class="val">15h30<small>o Chapeleiro Maluco insiste em pontualidade</small></div>
+          <div class="val">15h30<small>não cedo demais, não tarde demais</small></div>
         </div>
       </div>
       <div class="ticket-row">
@@ -660,6 +713,7 @@ section, .surface{ position:relative; }
         </div>
       </div>
     </div>
+    <p class="after-ticket">Anote, memorize, grave na parede se precisar. O País das Maravilhas não espera.</p>
     <div class="center">
       <a class="cal-btn" id="calBtn" href="#" download="cha-da-alice.ics">
         <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16M8 3v4M16 3v4M9 14l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -669,15 +723,17 @@ section, .surface{ position:relative; }
   </section>
 
   <!-- ===================== PRESENTE ===================== -->
-  <section class="gift reveal surface surface-panel">
-    <p class="chapter">Capítulo IV</p>
-    <h2>Um mimo para Alice</h2>
-    <p class="lead">A Alice vai chegar com muito sono, muito apetite e a curiosidade de quem ainda tem tudo por descobrir. Se quiser trazer algo para a jornada dela:</p>
+  <section class="gift reveal surface surface-lattice">
+    <p class="chapter">Capítulo III · A Mesa do Chapeleiro</p>
+    <h2>Toda boa festa tem uma mesa. A desta tem regras.</h2>
+    <p class="lead">A mesa do Chapeleiro Maluco nunca tinha fim. Sempre havia lugar, sempre havia chá, sempre havia algo que ninguém esperava. A mesa da Alice também vai ter tudo isso. Mas para montar uma festa digna de rainha, ela vai precisar de presentes que realmente importam.</p>
+    <p class="gift-q">O que trazer?</p>
+    <p>A Alice ainda não sabe andar, falar ou escolher. Mas já sabe de uma coisa: boas fraldas fazem toda a diferença entre um dia mágico e um dia… bem, menos mágico.</p>
     <ul class="gift-list">
-      <li>Fraldas <em>tamanhos M e G</em></li>
-      <li>Um mimo <em>a seu gosto</em></li>
+      <li>Fraldas <em>M ou G · Pampers ou Huggies</em></li>
+      <li>Um miminho <em>à sua escolha</em></li>
     </ul>
-    <p class="aside">Pampers ou Huggies · aprovadas pela Duquesa</p>
+    <p class="aside">o afeto é o que pesa na bagagem</p>
   </section>
 
   <!-- ===================== RSVP ===================== -->
@@ -689,9 +745,9 @@ section, .surface{ position:relative; }
       <path d="M73 50c10-19 31-25 47-20-10 14-29 22-43 24"/>
       <path d="M85 76l11 21M80 78l7 22"/>
     </svg>
-    <p class="chapter">Capítulo V</p>
-    <h2>Assine o livro do chá</h2>
-    <p class="intro-p">Todo bom chá começa com uma lista de convidados. Deixe seu nome e o de quem vier com você.</p>
+    <p class="chapter">Capítulo IV · A Rainha de Copas</p>
+    <h2>Ela quer saber se você virá, e não pergunta duas vezes</h2>
+    <p class="intro-p">A Rainha de Copas tinha muitos defeitos, mas um hábito impecável: sabia exatamente quem estaria no seu jardim. A Alice, e os papais dela, também querem saber. Não para cortar cabeças. Só para garantir o seu lugar à mesa.</p>
 
     <form id="rsvpForm" novalidate>
       <div class="field">
@@ -716,12 +772,18 @@ section, .surface{ position:relative; }
         Adicionar um lugar à mesa
       </button>
 
+      <div class="field">
+        <label for="recado">Um recado para a Alice <span class="opt">opcional</span></label>
+        <textarea id="recado" name="recado" rows="3" maxlength="400" placeholder="Um desejo, um conselho, uma boa risada para guardar…"></textarea>
+      </div>
+
       <div class="form-error" id="formError"></div>
 
       <button type="submit" class="submit" id="submitBtn">
-        <span class="txt">Assinar o livro ✦</span>
+        <span class="txt">Confirmar presença ✦</span>
         <span class="spin"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 109 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
       </button>
+      <p class="form-note">antes que a Rainha se impaciente</p>
     </form>
 
     <!-- Sucesso -->
@@ -732,9 +794,9 @@ section, .surface{ position:relative; }
         <path d="M7 34h24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         <path d="M15 6c-1.4 2 1.4 3 0 5M22 5c-1.4 2 1.4 3 0 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
       </svg>
-      <h3>Anotado no livro do chá</h3>
-      <p id="successMsg">Guardamos seu lugar à mesa. O chá está quase pronto. Até 08 de agosto!</p>
-      <button class="again" id="againBtn">adicionar outro convidado</button>
+      <h3>Seu lugar está guardado</h3>
+      <p id="successMsg">A Rainha anotou seu nome no jardim. Nos vemos em 08 de agosto!</p>
+      <button class="again" id="againBtn">confirmar mais alguém</button>
     </div>
   </section>
 
@@ -746,9 +808,12 @@ section, .surface{ position:relative; }
       <path d="M22 39c4 3 16 3 20 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
       <path d="M24 39l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <p class="quote">“Todos os melhores estão um pouco loucos.”</p>
-    <p class="end-chapter">E assim termina o primeiro capítulo.</p>
-    <p class="sig">com amor · a família da Alice</p>
+    <p class="chapter closing-eyebrow">Encerramento</p>
+    <h2 class="closing-title">Toda história boa acaba com um “e então ela acordou”. Exceto esta.</h2>
+    <p class="closing-body">Alice acordou do País das Maravilhas e percebeu que havia sonhado. Mas a nossa Alice não vai sonhar: ela vai viver. E você vai estar lá, no primeiro capítulo.</p>
+    <p class="see-you">Nos vemos em agosto ☕</p>
+    <p class="sig">com amor, André &amp; Camila <span class="heart">♥</span></p>
+    <p class="sig-date">08 · 08 · 2026</p>
   </footer>
 
 </main>
@@ -873,12 +938,15 @@ form.addEventListener('submit', async (e)=>{
   // Monta lista de pessoas (principal + acompanhantes)
   const seen = new Set();
   const people = [];
-  const push = (nome, whats)=>{
+  const push = (nome, whats, recado)=>{
     const key = digits(whats);
-    people.push({ nome:nome.trim(), whatsapp:key });
+    const person = { nome:nome.trim(), whatsapp:key };
+    if(recado) person.recado = recado;
+    people.push(person);
     seen.add(key);
   };
-  if(ok) push(nomeI.value, whatsI.value);
+  const recadoEl = document.getElementById('recado');
+  if(ok) push(nomeI.value, whatsI.value, recadoEl ? recadoEl.value.trim() : '');
 
   // Acompanhantes
   document.querySelectorAll('.guest').forEach(g=>{
@@ -925,8 +993,8 @@ form.addEventListener('submit', async (e)=>{
     // Sucesso
     const n = people.length;
     document.getElementById('successMsg').textContent = n>1
-      ? `Guardamos ${n} lugares à mesa. O Chapeleiro já arrumou as cadeiras. Até 08 de agosto!`
-      : 'Guardamos seu lugar à mesa. O chá está quase pronto. Até 08 de agosto!';
+      ? `A Rainha anotou ${n} nomes no jardim. Nos vemos em 08 de agosto!`
+      : 'A Rainha anotou seu nome no jardim. Nos vemos em 08 de agosto!';
 
     // Saída suave do formulário → entrada do sucesso (respeita reduced-motion)
     const soft = !window.matchMedia('(prefers-reduced-motion:reduce)').matches;
