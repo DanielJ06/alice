@@ -275,7 +275,7 @@
       <div style="text-align:center; margin-top:20px; color:var(--rose-bright); font-family:'EB Garamond'; font-style:italic; font-size:15px;">{{ error }}</div>
     </sc-if>
 
-    <button type="submit" class="btn-submit-main" disabled="{{ submitting }}" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; border-radius:3px; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer;">{{ submitLabel }}</button>
+    <button type="submit" class="btn-submit-main" disabled="{{ submitting }}" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; border-radius:3px; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer; opacity:{{ submitOpacity }};">{{ submitLabel }}</button>
     <div style="text-align: center; margin-top: 13px; font-family: 'EB Garamond'; font-style: italic; font-size: 16px; color: rgba(247,244,213,.55)">…antes que a Rainha se impaciente</div>
   </form>
   </sc-if>
@@ -287,7 +287,6 @@
       <p style="font-family:var(--display); font-size:26px; line-height:1.35; color:var(--paper); margin:0 auto 12px; max-width:300px;">{{ confirmName }}, seu lugar à mesa está reservado.</p>
       <p style="font-family:'EB Garamond'; font-style:italic; font-size:15px; color:rgba(247,244,213,.75); margin:0 auto 8px;">{{ summary }}</p>
       <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; color:var(--moss); margin:22px auto 0;">Nos vemos no País das Maravilhas.</p>
-      <button type="button" class="btn-nopress" onClick="{{ editAgain }}" style="margin-top:28px; background:none; border:none; color:rgba(247,244,213,.55); font-family:'EB Garamond'; font-size:13px; letter-spacing:.05em; text-decoration:underline; cursor:pointer;">editar minha resposta</button>
     </div>
   </sc-if>
 </section>
@@ -320,9 +319,10 @@
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { extra: [], submitted: false, submitting: false, error: '', confirmName: '', summary: '', draft: null, cd: { d: '00', h: '00', m: '00', s: '00' } };
+    this.state = { extra: [], submitted: false, submitting: false, error: '', confirmName: '', summary: '', cd: { d: '00', h: '00', m: '00', s: '00' } };
     this.formRef = React.createRef();
     this._uid = 0;
+    this._submitting = false;
   }
   componentDidMount() {
     this.target = new Date(2026, 7, 8, 15, 30, 0).getTime();
@@ -496,7 +496,8 @@ class Component extends DCLogic {
   async onSubmit(e) {
     e.preventDefault();
     const f = this.formRef.current;
-    if (!f || this.state.submitting) return;
+    if (!f || this.state.submitting || this._submitting) return;
+    this._submitting = true;
 
     this.setState({ error: '' });
     const nomeInput = f.querySelector('[data-role="nome"]');
@@ -527,7 +528,6 @@ class Component extends DCLogic {
     const guestNames = [...f.querySelectorAll('[data-role="ac-nome"]')];
     const guestPhones = [...f.querySelectorAll('[data-role="ac-whats"]')];
     const acs = [];
-    const draftGuests = [];
     guestNames.forEach((nameInput, index) => {
       const phoneInput = guestPhones[index];
       const guestName = this.cleanName(nameInput.value || '');
@@ -544,11 +544,11 @@ class Component extends DCLogic {
         return;
       }
       acs.push(guestName);
-      draftGuests.push({ nome: guestName, whatsapp: this.formatPhone(guestPhone) });
       pushPerson(guestName, guestPhone, '', 'acompanhante');
     });
 
     if (!ok) {
+      this._submitting = false;
       this.setState({ error: 'Alguns campos precisam de atenção. Confira nome, WhatsApp e números repetidos.' });
       const firstInvalid = f.querySelector('[aria-invalid="true"]');
       if (firstInvalid) firstInvalid.focus();
@@ -560,6 +560,7 @@ class Component extends DCLogic {
       await this.submitRsvp(people);
     } catch (err) {
       console.error(err);
+      this._submitting = false;
       this.setState({ submitting: false, error: 'Ops! O coelho se perdeu no caminho. Tente novamente em instantes.' });
       return;
     }
@@ -572,30 +573,9 @@ class Component extends DCLogic {
       submitted: true,
       submitting: false,
       confirmName: first,
-      summary,
-      draft: { nome, whatsapp: this.formatPhone(whats), recado, guests: draftGuests }
+      summary
     });
-  }
-  restoreDraft() {
-    const draft = this.state.draft;
-    const f = this.formRef.current;
-    if (!draft || !f) return;
-    const nomeInput = f.querySelector('[data-role="nome"]');
-    const whatsInput = f.querySelector('[data-role="whats"]');
-    const recadoInput = f.querySelector('[data-role="recado"]');
-    if (nomeInput) nomeInput.value = draft.nome || '';
-    if (whatsInput) whatsInput.value = draft.whatsapp || '';
-    if (recadoInput) recadoInput.value = draft.recado || '';
-    const guestNames = [...f.querySelectorAll('[data-role="ac-nome"]')];
-    const guestPhones = [...f.querySelectorAll('[data-role="ac-whats"]')];
-    (draft.guests || []).forEach((g, index) => {
-      if (guestNames[index]) guestNames[index].value = g.nome || '';
-      if (guestPhones[index]) guestPhones[index].value = g.whatsapp || '';
-    });
-  }
-  editAgain() {
-    const guests = (this.state.draft && this.state.draft.guests) || [];
-    this.setState({ submitted: false, error: '', extra: guests.map(() => ++this._uid) }, () => setTimeout(() => this.restoreDraft(), 0));
+    this._submitting = false;
   }
   addToCalendar() {
     const ics = [
@@ -626,13 +606,13 @@ class Component extends DCLogic {
       notSubmitted: !this.state.submitted,
       confirmName: this.state.confirmName,
       summary: this.state.summary,
-      editAgain: () => this.editAgain(),
       onCalendar: () => this.addToCalendar(),
       formRef: this.formRef,
       error: this.state.error,
       submitting: this.state.submitting,
       onPhoneInput: (e) => this.onPhoneInput(e),
-      submitLabel: this.state.submitting ? 'Confirmando...' : 'Confirmar presença'
+      submitLabel: this.state.submitting ? 'Confirmando...' : 'Confirmar presença',
+      submitOpacity: this.state.submitting ? '0.65' : '1'
     };
   }
 }
