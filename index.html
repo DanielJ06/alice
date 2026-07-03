@@ -238,12 +238,12 @@
 
     <div style="margin-bottom:26px;">
       <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">Seu nome completo</label>
-      <input data-role="nome" type="text" required="" placeholder="Como devemos anunciá-lo(a)?" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
+      <input data-role="nome" type="text" required="" maxlength="80" autocomplete="name" placeholder="Como devemos anunciá-lo(a)?" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
     </div>
 
     <div style="margin-bottom:8px;">
       <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">WhatsApp</label>
-      <input data-role="whats" type="tel" required="" placeholder="(00) 00000-0000" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
+      <input data-role="whats" type="tel" required="" inputmode="tel" maxlength="15" autocomplete="tel" onInput="{{ onPhoneInput }}" placeholder="(00) 00000-0000" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
     </div>
 
     <!-- Acompanhantes -->
@@ -255,11 +255,11 @@
         </div>
         <div style="margin-bottom:20px;">
           <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">Nome completo</label>
-          <input data-role="ac-nome" type="text" placeholder="Nome do acompanhante" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
+          <input data-role="ac-nome" type="text" maxlength="80" autocomplete="name" placeholder="Nome do acompanhante" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
         </div>
         <div>
           <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">WhatsApp</label>
-          <input data-role="ac-whats" type="tel" placeholder="(00) 00000-0000" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
+          <input data-role="ac-whats" type="tel" inputmode="tel" maxlength="15" autocomplete="tel" onInput="{{ onPhoneInput }}" placeholder="(00) 00000-0000" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; padding:9px 2px; outline:none;">
         </div>
       </div>
     </sc-for>
@@ -268,14 +268,14 @@
 
     <div style="margin-top:34px;">
       <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">Um recado para a Alice</label>
-      <textarea data-role="recado" rows="2" placeholder="Escreva algo para ela guardar no bolso do Coelho…" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; line-height:1.5; padding:9px 2px; outline:none; resize:none;"></textarea>
+      <textarea data-role="recado" rows="2" maxlength="500" placeholder="Escreva algo para ela guardar no bolso do Coelho…" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(247,244,213,.35); color:var(--paper); font-family:'EB Garamond'; font-size:17px; line-height:1.5; padding:9px 2px; outline:none; resize:none;"></textarea>
     </div>
 
     <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
       <div style="text-align:center; margin-top:20px; color:var(--rose-bright); font-family:'EB Garamond'; font-style:italic; font-size:15px;">{{ error }}</div>
     </sc-if>
 
-    <button type="submit" class="btn-submit-main" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; border-radius:3px; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer;">{{ submitLabel }}</button>
+    <button type="submit" class="btn-submit-main" disabled="{{ submitting }}" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; border-radius:3px; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer;">{{ submitLabel }}</button>
     <div style="text-align: center; margin-top: 13px; font-family: 'EB Garamond'; font-style: italic; font-size: 16px; color: rgba(247,244,213,.55)">…antes que a Rainha se impaciente</div>
   </form>
   </sc-if>
@@ -320,7 +320,7 @@
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { extra: [], submitted: false, submitting: false, error: '', confirmName: '', summary: '', cd: { d: '00', h: '00', m: '00', s: '00' } };
+    this.state = { extra: [], submitted: false, submitting: false, error: '', confirmName: '', summary: '', draft: null, cd: { d: '00', h: '00', m: '00', s: '00' } };
     this.formRef = React.createRef();
     this._uid = 0;
   }
@@ -367,16 +367,58 @@ class Component extends DCLogic {
     const s = Math.floor((diff % 60000) / 1000);
     this.setState({ cd: { d: String(d), h: this.pad(h), m: this.pad(m), s: this.pad(s) } });
   }
-  addGuest() { this.setState(st => ({ extra: [...st.extra, ++this._uid] })); }
+  addGuest() {
+    if (this.state.extra.length >= 10) {
+      this.setState({ error: 'Para grupos maiores, confirme com os papais pelo WhatsApp.' });
+      return;
+    }
+    this.setState(st => ({ extra: [...st.extra, ++this._uid], error: '' }));
+  }
   removeGuest(id) { this.setState(st => ({ extra: st.extra.filter(x => x !== id) })); }
   digits(value) { return String(value || '').replace(/\D/g, ''); }
+  cleanName(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
+  phoneKey(value) {
+    let d = this.digits(value);
+    if ((d.length === 12 || d.length === 13) && d.startsWith('55')) d = d.slice(2);
+    return d;
+  }
+  formatPhone(value) {
+    let d = this.phoneKey(value).slice(0, 11);
+    if (!d) return '';
+    if (d.length <= 2) return '(' + d;
+    if (d.length <= 10) {
+      return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + (d.length > 6 ? '-' + d.slice(6) : '');
+    }
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + (d.length > 7 ? '-' + d.slice(7) : '');
+  }
   validPhone(value) {
-    const d = this.digits(value);
-    return d.length === 10 || d.length === 11;
+    const d = this.phoneKey(value);
+    if (d.length !== 10 && d.length !== 11) return false;
+    const ddd = Number(d.slice(0, 2));
+    if (ddd < 11 || ddd > 99) return false;
+    if (/^(\d)\1+$/.test(d)) return false;
+    return !/^0+$/.test(d.slice(2));
+  }
+  onPhoneInput(e) {
+    e.target.value = this.formatPhone(e.target.value);
+    this.setFieldError(e.target, false);
   }
   setFieldError(input, hasError) {
     if (!input) return;
     input.style.borderBottomColor = hasError ? 'var(--rose-bright)' : 'rgba(247,244,213,.35)';
+    input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+  }
+  ensureResponseId() {
+    const key = 'alice-rsvp-response-id';
+    try {
+      const stored = window.localStorage && window.localStorage.getItem(key);
+      if (stored) return stored;
+      const id = 'rsvp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+      window.localStorage && window.localStorage.setItem(key, id);
+      return id;
+    } catch (_) {
+      return 'rsvp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    }
   }
   async submitRsvp(people) {
     const config = window.ALICE_INVITE_CONFIG || {};
@@ -388,7 +430,7 @@ class Component extends DCLogic {
     const response = await fetch(config.appsScriptUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ people })
+      body: JSON.stringify({ responseId: this.ensureResponseId(), people })
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || data.ok === false) {
@@ -460,45 +502,56 @@ class Component extends DCLogic {
     const nomeInput = f.querySelector('[data-role="nome"]');
     const whatsInput = f.querySelector('[data-role="whats"]');
     const recadoInput = f.querySelector('[data-role="recado"]');
-    const nome = (nomeInput?.value || '').trim();
+    const nome = this.cleanName(nomeInput?.value || '');
     const whats = whatsInput?.value || '';
+    const recado = String(recadoInput?.value || '').trim().slice(0, 500);
     let ok = true;
 
+    if (nomeInput) nomeInput.value = nome;
+    if (whatsInput) whatsInput.value = this.formatPhone(whats);
+    if (recadoInput) recadoInput.value = recado;
     this.setFieldError(nomeInput, nome.length < 3);
     this.setFieldError(whatsInput, !this.validPhone(whats));
     if (nome.length < 3 || !this.validPhone(whats)) ok = false;
 
     const people = [];
     const seen = new Set();
-    const pushPerson = (personName, phone, recado) => {
-      const key = this.digits(phone);
-      people.push({ nome: personName.trim(), whatsapp: key, ...(recado ? { recado } : {}) });
+    const pushPerson = (personName, phone, note, role) => {
+      const key = this.phoneKey(phone);
+      people.push({ nome: this.cleanName(personName), whatsapp: key, role, ...(note ? { recado: note } : {}) });
       seen.add(key);
     };
 
-    if (ok) pushPerson(nome, whats, (recadoInput?.value || '').trim());
+    if (ok) pushPerson(nome, whats, recado, 'principal');
 
     const guestNames = [...f.querySelectorAll('[data-role="ac-nome"]')];
     const guestPhones = [...f.querySelectorAll('[data-role="ac-whats"]')];
     const acs = [];
+    const draftGuests = [];
     guestNames.forEach((nameInput, index) => {
       const phoneInput = guestPhones[index];
-      const guestName = (nameInput.value || '').trim();
+      const guestName = this.cleanName(nameInput.value || '');
       const guestPhone = phoneInput?.value || '';
-      if (!guestName && !guestPhone) return;
-      const guestInvalid = guestName.length < 3 || !this.validPhone(guestPhone) || seen.has(this.digits(guestPhone));
+      const guestKey = this.phoneKey(guestPhone);
+      if (nameInput) nameInput.value = guestName;
+      if (phoneInput) phoneInput.value = this.formatPhone(guestPhone);
+      if (!guestName && !guestKey) return;
+      const guestInvalid = guestName.length < 3 || !this.validPhone(guestPhone) || seen.has(guestKey);
       this.setFieldError(nameInput, guestName.length < 3);
-      this.setFieldError(phoneInput, !this.validPhone(guestPhone) || seen.has(this.digits(guestPhone)));
+      this.setFieldError(phoneInput, !this.validPhone(guestPhone) || seen.has(guestKey));
       if (guestInvalid) {
         ok = false;
         return;
       }
       acs.push(guestName);
-      pushPerson(guestName, guestPhone, '');
+      draftGuests.push({ nome: guestName, whatsapp: this.formatPhone(guestPhone) });
+      pushPerson(guestName, guestPhone, '', 'acompanhante');
     });
 
     if (!ok) {
       this.setState({ error: 'Alguns campos precisam de atenção. Confira nome, WhatsApp e números repetidos.' });
+      const firstInvalid = f.querySelector('[aria-invalid="true"]');
+      if (firstInvalid) firstInvalid.focus();
       return;
     }
 
@@ -515,9 +568,35 @@ class Component extends DCLogic {
     let summary;
     if (acs.length === 0) summary = 'Um lugar reservado à mesa do chá.';
     else summary = 'Você e ' + acs.length + ' acompanhante' + (acs.length > 1 ? 's' : '') + ', ' + (acs.length + 1) + ' lugares reservados à mesa.';
-    this.setState({ submitted: true, submitting: false, confirmName: first, summary });
+    this.setState({
+      submitted: true,
+      submitting: false,
+      confirmName: first,
+      summary,
+      draft: { nome, whatsapp: this.formatPhone(whats), recado, guests: draftGuests }
+    });
   }
-  editAgain() { this.setState({ submitted: false, error: '' }); }
+  restoreDraft() {
+    const draft = this.state.draft;
+    const f = this.formRef.current;
+    if (!draft || !f) return;
+    const nomeInput = f.querySelector('[data-role="nome"]');
+    const whatsInput = f.querySelector('[data-role="whats"]');
+    const recadoInput = f.querySelector('[data-role="recado"]');
+    if (nomeInput) nomeInput.value = draft.nome || '';
+    if (whatsInput) whatsInput.value = draft.whatsapp || '';
+    if (recadoInput) recadoInput.value = draft.recado || '';
+    const guestNames = [...f.querySelectorAll('[data-role="ac-nome"]')];
+    const guestPhones = [...f.querySelectorAll('[data-role="ac-whats"]')];
+    (draft.guests || []).forEach((g, index) => {
+      if (guestNames[index]) guestNames[index].value = g.nome || '';
+      if (guestPhones[index]) guestPhones[index].value = g.whatsapp || '';
+    });
+  }
+  editAgain() {
+    const guests = (this.state.draft && this.state.draft.guests) || [];
+    this.setState({ submitted: false, error: '', extra: guests.map(() => ++this._uid) }, () => setTimeout(() => this.restoreDraft(), 0));
+  }
   addToCalendar() {
     const ics = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Cha da Alice//PT-BR', 'CALSCALE:GREGORIAN',
@@ -551,6 +630,8 @@ class Component extends DCLogic {
       onCalendar: () => this.addToCalendar(),
       formRef: this.formRef,
       error: this.state.error,
+      submitting: this.state.submitting,
+      onPhoneInput: (e) => this.onPhoneInput(e),
       submitLabel: this.state.submitting ? 'Confirmando...' : 'Confirmar presença'
     };
   }

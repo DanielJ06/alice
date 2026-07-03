@@ -25,8 +25,9 @@ numa **planilha do Google Sheets** — sem banco de dados e sem servidor.
 6. Clique em **Implantar** e autorize o acesso (é sua própria conta/planilha).
 7. Copie a **URL do app da Web** (termina em `/exec`).
 
-> A aba `Confirmações` é criada sozinha no primeiro envio, com as colunas:
-> Data/Hora · Nome · WhatsApp · WhatsApp (formatado) · Confirmações · Recado.
+> A aba `Confirmações` é criada sozinha no primeiro envio. Além dos dados
+> principais, ela guarda `Grupo`, `Tipo`, `Status` e `Última ação` para que
+> edições do mesmo RSVP não deixem acompanhantes antigos como confirmados.
 
 ### 2. Ligar o convite à planilha
 
@@ -54,10 +55,14 @@ Depois é só mandar o link no WhatsApp.
 
 - Cada pessoa (o convidado principal **e** cada acompanhante) vira **uma linha**.
 - O número de WhatsApp é normalizado (só dígitos) e usado como chave.
-- Se o mesmo número confirmar de novo, o script **atualiza** a linha existente e
-  incrementa a coluna **Confirmações** — em vez de criar duplicata.
+- Se o mesmo número confirmar de novo, o script **atualiza** a linha existente,
+  incrementa a coluna **Confirmações** e não cria duplicata.
+- Se alguém editar a resposta e remover um acompanhante, a linha antiga fica com
+  `Status = Removido` em vez de continuar parecendo ativa.
 - No próprio formulário, também não é possível repetir o mesmo número entre os
   acompanhantes do mesmo envio.
+- O backend valida tudo de novo no Apps Script, então payload manipulado pelo
+  navegador não grava nomes vazios, WhatsApps inválidos ou números repetidos.
 
 ## Detalhes do evento (já embutidos no convite)
 
