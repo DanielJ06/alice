@@ -6,7 +6,10 @@
    mostra sucesso, mas NÃO grava na planilha.
    ============================================================ */
 window.ALICE_INVITE_CONFIG = {
-  appsScriptUrl: "https://script.google.com/macros/s/AKfycbyqI82H5KgjHCaKke2nb8bFk135u-Oxk-WR8s_fHdptOfT4wgEh2fsQXBmy-TkZ_2SpqQ/exec",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbz6l_Jnskd05aOmB_lVMswB74teht0-gXZ0auciZSQPB4EXwFVGZ5i06cAy1fkkIwFsJw/exec",
+
+  // Chave de leitura do painel (painel.html). Deve ser IGUAL a READ_KEY no Code.gs.
+  painelKey: "alice-2026",
 
   calendar: {
     filename: "cha-da-alice.ics",

@@ -41,7 +41,7 @@ var MAX_PEOPLE = 12;
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(20000); // evita corrida entre envios simultâneos
+    lock.waitLock(5000); // evita corrida entre envios simultâneos
 
     if (!e || !e.postData || !e.postData.contents) {
       return json({ ok: false, error: 'Nenhum dado recebido' });
@@ -115,9 +115,70 @@ function doPost(e) {
   }
 }
 
-// GET simples só para testar que a implantação está no ar.
-function doGet() {
+// Chave de leitura do painel (painel.html). Troque por algo só seu e
+// coloque o MESMO valor em scripts/config.js → painelKey.
+// Deixe vazio ('') para liberar a leitura sem chave (não recomendado).
+var READ_KEY = 'alice-2026';
+
+// GET: sem parâmetros → teste de saúde. Com ?action=list&key=... → dados do painel.
+function doGet(e) {
+  var params = (e && e.parameter) || {};
+  if (params.action === 'list') {
+    if (READ_KEY && String(params.key || '') !== READ_KEY) {
+      return json({ ok: false, error: 'Chave inválida' });
+    }
+    return json(listConfirmations());
+  }
   return json({ ok: true, service: 'Chá da Alice RSVP', time: new Date() });
+}
+
+// Lê a aba e devolve os convidados agrupados por Grupo (família), do mais
+// recente para o mais antigo. Cada grupo traz o principal primeiro.
+function listConfirmations() {
+  var sheet = getSheet();
+  var cols = headerMap(sheet);
+  var data = sheet.getDataRange().getValues();
+  var groups = {};
+  var order = [];
+
+  for (var r = 1; r < data.length; r++) {
+    var row = data[r];
+    var nome = String(row[cols['Nome']] || '').trim();
+    if (!nome) continue;
+
+    var groupId = String(row[cols['Grupo']] || '') || ('linha-' + r);
+    if (!groups[groupId]) {
+      groups[groupId] = { id: groupId, updatedAt: 0, people: [] };
+      order.push(groupId);
+    }
+
+    var ts = row[cols['Data/Hora']];
+    var updatedAt = ts instanceof Date ? ts.getTime() : (ts ? new Date(ts).getTime() : 0);
+    if (updatedAt > groups[groupId].updatedAt) groups[groupId].updatedAt = updatedAt;
+
+    groups[groupId].people.push({
+      nome: nome,
+      whatsapp: String(row[cols['WhatsApp']] || '').replace(/\D/g, ''),
+      pretty: String(row[cols['WhatsApp (formatado)']] || ''),
+      confirmacoes: Number(row[cols['Confirmações']]) || 0,
+      recado: String(row[cols['Recado']] || '').trim(),
+      tipo: String(row[cols['Tipo']] || ''),
+      status: String(row[cols['Status']] || ''),
+      updatedAt: updatedAt
+    });
+  }
+
+  var list = order.map(function (id) { return groups[id]; });
+  list.forEach(function (g) {
+    g.people.sort(function (a, b) {
+      if (a.tipo === 'Principal' && b.tipo !== 'Principal') return -1;
+      if (b.tipo === 'Principal' && a.tipo !== 'Principal') return 1;
+      return 0;
+    });
+  });
+  list.sort(function (a, b) { return b.updatedAt - a.updatedAt; });
+
+  return { ok: true, groups: list, serverTime: Date.now() };
 }
 
 function getSheet() {
