@@ -6,7 +6,7 @@
    mostra sucesso, mas NÃO grava na planilha.
    ============================================================ */
 window.ALICE_INVITE_CONFIG = {
-  appsScriptUrl: "", // ex.: "https://script.google.com/macros/s/AKfy.../exec"
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbxH987xXdpt7rYYvaxiGgkUfHcGhO067hBQ_eCGpd_-FkTdaa4EJQZgTu5HbGwSoFCGdg/exec",
 
   calendar: {
     filename: "cha-da-alice.ics",

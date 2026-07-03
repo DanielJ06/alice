@@ -23,7 +23,7 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  body { background: var(--canvas); -webkit-font-smoothing: antialiased; font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1, "onum" 0; }
+  body { background: var(--canvas); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "lnum" 1, "onum" 0, "tnum" 1; }
   ::selection { background: var(--rose); color: var(--ink); }
   #petals { position:fixed; inset:0; pointer-events:none; z-index:10; overflow:hidden; }
   .petal { position:absolute; top:-8vh; will-change:transform, opacity; opacity:0; }
@@ -37,6 +37,43 @@
   .illus { position:absolute; pointer-events:none; user-select:none; -webkit-user-select:none; }
   .illus-d { mix-blend-mode:screen; }
   .illus-l { mix-blend-mode:multiply; }
+
+  /* === Typography === */
+  h1, h2 { text-wrap: balance; }
+
+  /* === Inputs — transição suave no foco === */
+  input, textarea { transition: border-color 0.2s cubic-bezier(0.2, 0, 0, 1); }
+
+  /* === Botões — feedback tátil === */
+  button { touch-action: manipulation; transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.2, 0, 0, 1); }
+  button:active { transform: scale(0.96); }
+  .btn-nopress:active { transform: none !important; }
+  @media (hover: hover) {
+    .btn-cal:hover { opacity: 0.78; }
+    .btn-submit-main:hover { opacity: 0.88; }
+    .btn-add-guest:hover { opacity: 0.7; }
+  }
+
+  /* === Scroll reveals — entrada escalonada === */
+  /* data-reveal — fade + slide (não usar em elementos com mix-blend-mode) */
+  [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 0.6s cubic-bezier(0.2, 0, 0, 1), transform 0.6s cubic-bezier(0.2, 0, 0, 1); }
+  [data-reveal].in { opacity: 1; transform: none; }
+  /* data-reveal-slide — apenas slide, sem opacity (seguro para mix-blend-mode) */
+  [data-reveal-slide] { transform: translateY(18px); transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1); }
+  [data-reveal-slide].in { transform: none; }
+  [data-reveal][data-delay="1"], [data-reveal-slide][data-delay="1"] { transition-delay: 100ms; }
+  [data-reveal][data-delay="2"], [data-reveal-slide][data-delay="2"] { transition-delay: 200ms; }
+  [data-reveal][data-delay="3"], [data-reveal-slide][data-delay="3"] { transition-delay: 300ms; }
+
+  /* === Reduced motion — respeitar preferência do usuário === */
+  @media (prefers-reduced-motion: reduce) {
+    .illus { animation: none !important; }
+    #petals { display: none; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+    [data-reveal-slide] { transform: none !important; transition: none !important; }
+    button { transition: none; }
+    input, textarea { transition: none; }
+  }
 </style>
 </helmet>
 
@@ -79,19 +116,20 @@
 <section data-screen-label="Capítulo I" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
   <img class="illus illus-l" src="./assets/beige-bg/flores.png" style="left:-28px; top:6px; width:158px; opacity:.34; --ir:12deg; animation:float-illus 13s ease-in-out infinite 1s;" alt="">
   <img class="illus illus-l" src="./assets/beige-bg/flores.png" style="right:-26px; top:10px; width:162px; opacity:.34; --ir:-12deg; animation:float-illus 12s ease-in-out infinite;" alt="">
-  <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo I</div>
-  <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">O Convite</h2>
-
-  <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 30px;">
-    <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
-    <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
-    <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+  <div data-reveal>
+    <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo I</div>
+    <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">O Convite</h2>
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 30px;">
+      <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+      <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
+      <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+    </div>
   </div>
 
-  <img src="./assets/beige-bg/coelho.png" style="width:172px; mix-blend-mode:multiply; display:block; margin:0 auto 26px;" alt="">
+  <img data-reveal-slide data-delay="1" src="./assets/beige-bg/coelho.png" style="width:172px; mix-blend-mode:multiply; display:block; margin:0 auto 26px;" alt="">
 
-  <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 16px; text-wrap:pretty;">Nem sempre sabemos quando uma história começa. Às vezes ela começa com um sorriso na tela de um ultrassom; às vezes, com um nome sussurrado entre dois. O nome dela é <em style="font-style:italic; color:var(--ink);">Alice</em>.</p>
-  <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto; text-wrap:pretty;">Ela ainda não chegou, mas já mudou tudo. Este é um convite para você, que faz parte do mundo que ela vai conhecer: queremos você aqui quando ela der os primeiros passos nessa aventura. Traga seu sorriso mais bonito e um bocadinho de imaginação. No País das Maravilhas, tudo pode acontecer.</p>
+  <p data-reveal data-delay="2" style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 16px; text-wrap:pretty;">Nem sempre sabemos quando uma história começa. Às vezes ela começa com um sorriso na tela de um ultrassom; às vezes, com um nome sussurrado entre dois. O nome dela é <em style="font-style:italic; color:var(--ink);">Alice</em>.</p>
+  <p data-reveal data-delay="3" style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto; text-wrap:pretty;">Ela ainda não chegou, mas já mudou tudo. Este é um convite para você, que faz parte do mundo que ela vai conhecer: queremos você aqui quando ela der os primeiros passos nessa aventura. Traga seu sorriso mais bonito e um bocadinho de imaginação. No País das Maravilhas, tudo pode acontecer.</p>
 </section>
 
 <!-- ============ CAP II — O CHÁ (detalhes + contagem) ============ -->
@@ -100,18 +138,19 @@
   <img class="illus illus-d" src="./assets/dark-bg/xicara.png" style="right:-22px; top:22%; width:144px; opacity:.44; --ir:12deg; animation:float-illus 8.5s ease-in-out infinite 3.5s;" alt="">
   <img class="illus illus-d" src="./assets/dark-bg/relogio.png" style="left:-32px; top:44%; width:148px; opacity:.38; --ir:-8deg; animation:float-illus 12s ease-in-out infinite 2s;" alt="">
   <img class="illus illus-d" src="./assets/dark-bg/chave.png" style="right:-18px; top:64%; width:110px; opacity:.40; --ir:22deg; animation:float-illus 11s ease-in-out infinite 4s;" alt="">
-  <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-bright); line-height:1; margin-bottom:10px;">Capítulo II</div>
-  <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--paper);">O Chá</h2>
-
-  <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 32px;">
-    <span style="height:1px; width:44px; background:currentColor; opacity:.5;"></span>
-    <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
-    <span style="height:1px; width:44px; background:currentColor; opacity:.5;"></span>
+  <div data-reveal>
+    <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-bright); line-height:1; margin-bottom:10px;">Capítulo II</div>
+    <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--paper);">O Chá</h2>
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 32px;">
+      <span style="height:1px; width:44px; background:currentColor; opacity:.5;"></span>
+      <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
+      <span style="height:1px; width:44px; background:currentColor; opacity:.5;"></span>
+    </div>
   </div>
 
-  <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; color:rgba(247,244,213,.8); margin:0 0 30px;">O Coelho Branco nunca se atrasou por acaso. Ele sabia exatamente onde precisava estar, e agora você também sabe.</p>
+  <p data-reveal data-delay="1" style="font-family:'EB Garamond'; font-style:italic; font-size:16px; color:rgba(247,244,213,.8); margin:0 0 30px;">O Coelho Branco nunca se atrasou por acaso. Ele sabia exatamente onde precisava estar, e agora você também sabe.</p>
 
-  <div style="max-width:320px; margin:0 auto;">
+  <div data-reveal data-delay="2" style="max-width:320px; margin:0 auto;">
     <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.32em; font-size:10.5px; color:var(--moss); margin-bottom:8px;">Quando</div>
     <div style="font-family:var(--display); font-size:23px; line-height:1.4; color:var(--paper);">Sábado, 08 de agosto</div>
     <div style="font-family:var(--display); font-size:23px; color:var(--paper); margin-top:2px;">às 15h30</div>
@@ -123,7 +162,7 @@
     <div style="font-family:var(--display); font-size:23px; color:var(--paper);">Mansão N&amp;N</div>
   </div>
 
-  <div style="margin-top:44px;">
+  <div data-reveal data-delay="3" style="margin-top:44px;">
     <div style="font-family:'Pinyon Script', cursive; font-size:26px; color:var(--rose-bright); margin-bottom:16px;">A toca abre em…</div>
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; max-width:320px; margin:0 auto;">
       <div>
@@ -143,25 +182,26 @@
         <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.16em; font-size:10px; color:var(--moss); margin-top:8px;">Seg</div>
       </div>
     </div>
-    <button type="button" onClick="{{ onCalendar }}" style="margin-top:38px; display:inline-flex; align-items:center; gap:9px; background:transparent; border:1px solid rgba(247,244,213,.4); border-radius:100px; padding:12px 24px; color:var(--paper); font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.2em; font-size:11px; cursor:pointer;"><span style="font-size:13px; letter-spacing:0;">♣</span>Adicionar ao calendário</button>
+    <button type="button" class="btn-cal" onClick="{{ onCalendar }}" style="margin-top:38px; display:inline-flex; align-items:center; gap:9px; background:transparent; border:1px solid rgba(247,244,213,.4); border-radius:100px; padding:12px 24px; color:var(--paper); font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.2em; font-size:11px; cursor:pointer;"><span style="font-size:13px; letter-spacing:0;">♣</span>Adicionar ao calendário</button>
   </div>
 </section>
 
 <!-- ============ CAP III — PRESENTES ============ -->
 <section data-screen-label="Capítulo III" style="background:var(--paper); color:var(--ink); padding:56px 36px 50px; text-align:center; min-height:85vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
   <img class="illus illus-l" src="./assets/beige-bg/chapeu.png" style="right:-30px; top:8px; width:152px; opacity:.35; --ir:8deg; animation:float-illus 10s ease-in-out infinite;" alt="">
-  <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo III</div>
-  <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">Lembrancinhas</h2>
-
-  <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 28px;">
-    <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
-    <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
-    <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+  <div data-reveal>
+    <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-deep); line-height:1; margin-bottom:10px;">Capítulo III</div>
+    <h2 style="font-family:var(--display); font-weight:600; font-size:40px; letter-spacing:.02em; margin:2px 0 0; color:var(--ink);">Lembrancinhas</h2>
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 28px;">
+      <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+      <span style="width:7px; height:7px; transform:rotate(45deg); border:1px solid currentColor;"></span>
+      <span style="height:1px; width:44px; background:currentColor; opacity:.45;"></span>
+    </div>
   </div>
 
-  <p style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 30px; text-wrap:pretty;">A mesa do Chapeleiro estava sempre posta, e cada convidado chegava com algo nas mãos. A da Alice segue a mesma tradição: para deixá-la digna de uma pequena rainha, contamos com o seu presente. Eis o que ela mais vai precisar:</p>
+  <p data-reveal data-delay="1" style="font-family:'EB Garamond'; font-size:17px; line-height:1.75; color:#2c3a2d; max-width:340px; margin:0 auto 30px; text-wrap:pretty;">A mesa do Chapeleiro estava sempre posta, e cada convidado chegava com algo nas mãos. A da Alice segue a mesma tradição: para deixá-la digna de uma pequena rainha, contamos com o seu presente. Eis o que ela mais vai precisar:</p>
 
-  <div style="max-width:300px; margin:0 auto;">
+  <div data-reveal-slide data-delay="2" style="max-width:300px; margin:0 auto; background:var(--paper);">
     <img src="./assets/beige-bg/fralda.png" style="width:74px; mix-blend-mode:multiply; opacity:.76; display:block; margin:0 auto 10px;" alt="">
     <div style="font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.3em; font-size:10.5px; color:var(--moss); margin-bottom:6px;">Sugestão</div>
     <div style="font-family:var(--display); font-size:27px; color:var(--ink); line-height:1.25;">Fraldas M e G</div>
@@ -182,7 +222,7 @@
 
 <!-- ============ CAP IV — RSVP ============ -->
 <section data-screen-label="Capítulo IV — RSVP" style="background:var(--ink); color:var(--paper); padding:56px 34px 54px; position:relative; min-height:85vh; display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
-  <div style="text-align:center;">
+  <div data-reveal style="text-align:center;">
     <div style="font-family:'Jost', sans-serif; font-weight:500; text-transform:uppercase; letter-spacing:.34em; font-size:11px; color:var(--rose-bright); line-height:1; margin-bottom:10px;">Capítulo IV</div>
     <h2 style="font-family:var(--display); font-weight:600; font-size:38px; letter-spacing:.02em; margin:2px 0 0; color:var(--paper);">Confirme sua presença</h2>
     <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 24px;">
@@ -211,7 +251,7 @@
       <div style="margin-top:30px; padding-top:22px; border-top:1px dashed rgba(131,153,88,.4);">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;">
           <span style="font-family:var(--display); font-style:italic; font-size:20px; color:var(--rose);">Acompanhante</span>
-          <button type="button" onClick="{{ g.remove }}" style="background:none; border:none; color:var(--moss); font-family:'EB Garamond'; font-size:13px; letter-spacing:.05em; cursor:pointer; padding:4px;">remover ✕</button>
+          <button type="button" class="btn-nopress" onClick="{{ g.remove }}" style="background:none; border:none; color:var(--moss); font-family:'EB Garamond'; font-size:13px; letter-spacing:.05em; cursor:pointer; padding:4px;">remover ✕</button>
         </div>
         <div style="margin-bottom:20px;">
           <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">Nome completo</label>
@@ -224,7 +264,7 @@
       </div>
     </sc-for>
 
-    <button type="button" onClick="{{ addGuest }}" style="display: block; margin: 26px auto 0; background: none; border: none; color: var(--rose); font-family: var(--display); font-style: normal; font-size: 19px; cursor: pointer; padding: 6px">＋ adicionar acompanhante</button>
+    <button type="button" class="btn-add-guest" onClick="{{ addGuest }}" style="display: block; margin: 26px auto 0; background: none; border: none; color: var(--rose); font-family: var(--display); font-style: normal; font-size: 19px; cursor: pointer; padding: 6px">＋ adicionar acompanhante</button>
 
     <div style="margin-top:34px;">
       <label style="display:block; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.28em; font-size:10px; color:var(--moss); margin-bottom:8px;">Um recado para a Alice</label>
@@ -235,7 +275,7 @@
       <div style="text-align:center; margin-top:20px; color:var(--rose-bright); font-family:'EB Garamond'; font-style:italic; font-size:15px;">{{ error }}</div>
     </sc-if>
 
-    <button type="submit" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer;">{{ submitLabel }}</button>
+    <button type="submit" class="btn-submit-main" style="width:100%; margin-top:34px; background:var(--paper); color:var(--ink); border:none; border-radius:3px; padding:17px; font-family:'Jost', sans-serif; text-transform:uppercase; letter-spacing:.26em; font-size:12.5px; cursor:pointer;">{{ submitLabel }}</button>
     <div style="text-align: center; margin-top: 13px; font-family: 'EB Garamond'; font-style: italic; font-size: 16px; color: rgba(247,244,213,.55)">…antes que a Rainha se impaciente</div>
   </form>
   </sc-if>
@@ -247,7 +287,7 @@
       <p style="font-family:var(--display); font-size:26px; line-height:1.35; color:var(--paper); margin:0 auto 12px; max-width:300px;">{{ confirmName }}, seu lugar à mesa está reservado.</p>
       <p style="font-family:'EB Garamond'; font-style:italic; font-size:15px; color:rgba(247,244,213,.75); margin:0 auto 8px;">{{ summary }}</p>
       <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; color:var(--moss); margin:22px auto 0;">Nos vemos no País das Maravilhas.</p>
-      <button type="button" onClick="{{ editAgain }}" style="margin-top:28px; background:none; border:none; color:rgba(247,244,213,.55); font-family:'EB Garamond'; font-size:13px; letter-spacing:.05em; text-decoration:underline; cursor:pointer;">editar minha resposta</button>
+      <button type="button" class="btn-nopress" onClick="{{ editAgain }}" style="margin-top:28px; background:none; border:none; color:rgba(247,244,213,.55); font-family:'EB Garamond'; font-size:13px; letter-spacing:.05em; text-decoration:underline; cursor:pointer;">editar minha resposta</button>
     </div>
   </sc-if>
 </section>
@@ -259,18 +299,18 @@
   <img class="illus illus-l" src="./assets/beige-bg/chave.png" style="left:-18px; bottom:-20px; width:92px; opacity:.36; --ir:-38deg; animation:drift-illus 13s ease-in-out infinite 5s;" alt="">
   <img src="./assets/beige-bg/gato.png" style="width:168px; mix-blend-mode:multiply; display:block; margin:0 auto 28px;" alt="">
 
-  <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; line-height:1.7; color:#4a4038; max-width:320px; margin:0 auto 30px; text-wrap:pretty;">Toda boa história termina com um “e então ela acordou”. Esta, não: a nossa Alice não vai sonhar o País das Maravilhas, ela vai vivê-lo. E você estará lá, no primeiro capítulo.</p>
+  <p data-reveal data-delay="1" style="font-family:'EB Garamond'; font-style:italic; font-size:16px; line-height:1.7; color:#4a4038; max-width:320px; margin:0 auto 30px; text-wrap:pretty;">Toda boa história termina com um “e então ela acordou”. Esta, não: a nossa Alice não vai sonhar o País das Maravilhas, ela vai vivê-lo. E você estará lá, no primeiro capítulo.</p>
 
-  <div style="font-family: 'Pinyon Script', cursive; font-size: 30px; color: #0A3323; line-height: 1">Com todo o carinho,</div>
-  <div style="font-family:var(--display); font-weight:600; font-size:34px; letter-spacing:.03em; color:var(--ink); margin-top:6px;">André &amp; Camila</div>
-
-  <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 22px;">
-    <span style="height:1px; width:36px; background:currentColor; opacity:.45;"></span>
-    <span style="width:6px; height:6px; transform:rotate(45deg); border:1px solid currentColor;"></span>
-    <span style="height:1px; width:36px; background:currentColor; opacity:.45;"></span>
+  <div data-reveal data-delay="2">
+    <div style="font-family: 'Pinyon Script', cursive; font-size: 30px; color: #0A3323; line-height: 1">Com todo o carinho,</div>
+    <div style="font-family:var(--display); font-weight:600; font-size:34px; letter-spacing:.03em; color:var(--ink); margin-top:6px;">André &amp; Camila</div>
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; color:var(--moss); margin:22px auto 22px;">
+      <span style="height:1px; width:36px; background:currentColor; opacity:.45;"></span>
+      <span style="width:6px; height:6px; transform:rotate(45deg); border:1px solid currentColor;"></span>
+      <span style="height:1px; width:36px; background:currentColor; opacity:.45;"></span>
+    </div>
+    <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; line-height:1.6; color:#6b5d55; max-width:280px; margin:0 auto;">e a pequena Alice, que já é tão esperada. Nos vemos em agosto.</p>
   </div>
-
-  <p style="font-family:'EB Garamond'; font-style:italic; font-size:16px; line-height:1.6; color:#6b5d55; max-width:280px; margin:0 auto;">e a pequena Alice, que já é tão esperada. Nos vemos em agosto.</p>
 </section>
 
 </div>
@@ -290,6 +330,7 @@ class Component extends DCLogic {
     this.timer = setInterval(() => this.tick(), 1000);
     this.applyTheme();
     this.initPetals();
+    this.initReveal();
   }
   componentDidUpdate() { this.applyTheme(); }
   componentWillUnmount() { clearInterval(this.timer); }
@@ -353,6 +394,43 @@ class Component extends DCLogic {
     if (!response.ok || data.ok === false) {
       throw new Error(data.error || 'Falha ao gravar confirmação');
     }
+  }
+  initReveal() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sel = '[data-reveal],[data-reveal-slide]';
+    const revealedIndexes = new Set();
+
+    const allEls = () => [...document.querySelectorAll(sel)];
+
+    if (!('IntersectionObserver' in window)) {
+      allEls().forEach(el => el.classList.add('in'));
+      return;
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      const all = allEls();
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const i = all.indexOf(e.target);
+          if (i >= 0) revealedIndexes.add(i);
+          e.target.classList.add('in');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    const sync = () => {
+      allEls().forEach((el, i) => {
+        if (revealedIndexes.has(i)) el.classList.add('in');
+        else obs.observe(el);
+      });
+    };
+
+    sync();
+
+    // Observa o container por mudanças de DOM (ex: countdown tick)
+    const container = document.querySelector('[data-screen-label]')?.closest('div') || document.body;
+    new MutationObserver(sync).observe(container, { childList: true, subtree: true });
   }
   initPetals() {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
