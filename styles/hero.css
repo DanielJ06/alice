@@ -1,0 +1,98 @@
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: 56px 22px;
+  overflow: hidden;
+}
+/* Aquarela de fundo do hero — duas manchas coesas (teal + moss) */
+.hero-wc {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  width: min(100%, 720px);
+  aspect-ratio: 1/1.03;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.78;
+  mix-blend-mode: multiply;
+}
+
+.hero .chapter,
+.hero h1,
+.hero-narr,
+.hero-seal,
+.hero-cursive,
+.hero-cta {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 10.5vw, 4.4rem);
+  letter-spacing: -0.01em;
+  line-height: 1.02;
+  color: var(--ink);
+}
+.hero h1 .script {
+  display: block;
+  font-family: var(--script);
+  font-size: 1.62em;
+  line-height: 0.98;
+  color: var(--sage-deep);
+  margin-top: 0.04em;
+}
+.hero h1 .the {
+  display: block;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  font-style: normal;
+  margin-bottom: 1em;
+  font-weight: 600;
+}
+.hero-sub {
+  margin: 28px auto 0;
+  max-width: 32ch;
+  font-size: var(--fs-lead);
+  color: var(--ink-soft);
+  font-style: italic;
+  line-height: 1.5;
+}
+.hero-baby {
+  margin-top: 30px;
+  font-style: italic;
+  font-size: var(--fs-body);
+  color: var(--ink-soft);
+}
+.hero-baby b {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Entrada escalonada do hero */
+.hero .stagger {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: rise 1.2s var(--ease) forwards;
+}
+.hero .d0 { animation-delay: 0.04s; }
+.hero .d1 { animation-delay: 0.15s; }
+.hero .d2 { animation-delay: 0.35s; }
+.hero .d3 { animation-delay: 0.55s; }
+.hero .d4 { animation-delay: 0.78s; }
+.hero .d5 { animation-delay: 1.02s; }
+.hero .d6 { animation-delay: 1.3s; }
+@keyframes rise {
+  to { opacity: 1; transform: none; }
+}

@@ -1,0 +1,111 @@
+/* ============================================================
+   PRESENTE — callout visual com ícones (não texto corrido)
+   ============================================================ */
+.gift {
+  text-align: center;
+}
+.gift h2 {
+  margin-bottom: 0.55em;
+}
+.gift .lead {
+  max-width: 34ch;
+  margin: 0 auto;
+}
+.gift-q {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--ink);
+  margin: 1.5em 0 0.6em;
+}
+/* Callout box com borda decorativa */
+.gift-callout {
+  margin: 0 auto;
+  max-width: 26rem;
+  border: 1.5px dashed var(--sage);
+  border-radius: 10px;
+  background: rgba(234, 237, 207, 0.5);
+  padding: 10px 20px;
+  position: relative;
+}
+.gift-callout::before {
+  content: "◇";
+  position: absolute;
+  top: -0.6em;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel);
+  padding: 0 0.5em;
+  color: var(--sage);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+.gift-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.gift-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--display);
+  font-size: 1.18rem;
+  color: var(--ink);
+  padding: 18px 6px;
+  text-align: left;
+}
+.gift-list li + li {
+  border-top: 1px solid var(--edge);
+}
+.gift-list li em {
+  display: block;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.88em;
+  margin-top: 3px;
+  font-family: var(--serif);
+}
+.gift-ic {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(170, 180, 136, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sage-deep);
+}
+.gift-ic svg {
+  width: 24px;
+  height: 24px;
+}
+.gift-text strong {
+  display: block;
+}
+.gift .aside {
+  display: block;
+  margin-top: 20px;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  font-family: var(--serif);
+  font-weight: 600;
+}
+
+/* Animação escalonada gift items */
+.gift-list li {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.gift.in .gift-list li {
+  opacity: 1;
+  transform: none;
+}
+.gift.in .gift-list li:nth-child(1) { transition-delay: 0.15s; }
+.gift.in .gift-list li:nth-child(2) { transition-delay: 0.27s; }

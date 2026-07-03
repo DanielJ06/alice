@@ -1,0 +1,17 @@
+/* ============================================================
+   ENTRADAS ESCALONADAS
+   ============================================================ */
+.details .ticket-row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.details.in .ticket-row {
+  opacity: 1;
+  transform: none;
+}
+.details.in .ticket-row:nth-child(1) { transition-delay: 0.12s; }
+.details.in .ticket-row:nth-child(2) { transition-delay: 0.24s; }
+.details.in .ticket-row:nth-child(3) { transition-delay: 0.36s; }

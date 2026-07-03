@@ -1,0 +1,46 @@
+/* ============================================================
+   O CHÁ DA ALICE — Convite interativo
+   Tema: Alice no País das Maravilhas · refinado, mobile-first
+   ============================================================ */
+
+:root {
+  --paper: #f7f4d5;
+  --paper-deep: #efedc9;
+  --ink: #21362a;
+  --ink-soft: #58614c;
+  --sage: #aab488;
+  --sage-deep: #7c9350;
+  --olive: #0a3323;
+  --sky: #a7c3bb;
+  --sky-deep: #6f9f9c;
+  --alice: #4d8d9c;
+  --alice-deep: #105666;
+  --rose: #d3968c;
+  --blush: #e2beb6;
+
+  --script: "Pinyon Script", "Snell Roundhand", cursive;
+  --edge: rgba(33, 54, 42, 0.15);
+  --frame: rgba(33, 54, 42, 0.24);
+  --panel: #e9edcf;
+  --lat: rgba(124, 147, 80, 0.14);
+  --shadow:
+    0 1px 1px rgba(51, 50, 44, 0.04),
+    0 4px 8px -4px rgba(51, 50, 44, 0.14),
+    22px 32px 58px -30px rgba(51, 50, 44, 0.42);
+
+  --serif: "Newsreader", Georgia, serif;
+  --display: "Fraunces", Georgia, serif;
+
+  --maxw: 640px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.2, 0, 0, 1);
+
+  --fs-eyebrow: 0.7rem;
+  --ls-eyebrow: 0.3em;
+  --fs-body: 1.0625rem;
+  --fs-lead: clamp(1.1rem, 3.4vw, 1.22rem);
+  --fs-quote: clamp(1.25rem, 4.6vw, 1.6rem);
+  --fs-h3: 1.35rem;
+  --fs-h2: clamp(2rem, 7vw, 2.85rem);
+  --fs-h1: clamp(3.3rem, 16vw, 6rem);
+}

@@ -1,0 +1,94 @@
+/* ============================================================
+   ESTRUTURA — moldura, superfícies e motivos
+   ============================================================ */
+.frame {
+  position: fixed;
+  inset: 11px;
+  z-index: 40;
+  pointer-events: none;
+  border: 1px solid var(--frame);
+}
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--frame);
+  opacity: 0.45;
+}
+.fc {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--frame);
+  transform: rotate(45deg);
+}
+.fc.tl { top: -4px; left: -4px; }
+.fc.tr { top: -4px; right: -4px; }
+.fc.bl { bottom: -4px; left: -4px; }
+.fc.br { bottom: -4px; right: -4px; }
+@media (max-width: 400px) {
+  .frame { inset: 8px; }
+}
+
+section,
+.surface {
+  position: relative;
+}
+.surface::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+.surface-panel::before {
+  background: var(--panel);
+}
+.surface-lattice::before {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--lat) 0 1px,
+      transparent 1px 52px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      var(--lat) 0 1px,
+      transparent 1px 52px
+    ),
+    var(--panel);
+}
+
+.intro::before,
+.details::before,
+.rsvp::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 1px;
+  background: var(--edge);
+}
+.surface-green::before {
+  border-color: transparent;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.045) 0 1px,
+      transparent 1px 44px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.045) 0 1px,
+      transparent 1px 44px
+    ),
+    linear-gradient(180deg, #0d3b28, #0a3323);
+}

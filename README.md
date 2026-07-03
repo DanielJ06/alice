@@ -4,7 +4,12 @@ Convite de chá de bebê com tema *Alice no País das Maravilhas*, 100% responsi
 (feito para abrir no celular), com confirmação de presença (RSVP) gravada direto
 numa **planilha do Google Sheets** — sem banco de dados e sem servidor.
 
-- **`index.html`** — o convite inteiro (um arquivo só: HTML + CSS + JS).
+- **`index.html`** — estrutura e textos do convite.
+- **`styles/main.css`** — índice dos arquivos de estilo, via `@import`.
+- **`styles/*.css`** — estilos por área: base, tipografia, hero, detalhes, RSVP, rodapé etc.
+- **`scripts/config.js`** — dados fáceis de alterar, como URL do Apps Script e calendário.
+- **`scripts/app.js`** — inicializa o convite.
+- **`scripts/*.js`** — comportamento separado por responsabilidade: telefone, efeitos, acompanhantes, RSVP, calendário e validação.
 - **`apps-script/Code.gs`** — o script que grava as confirmações na sua planilha.
 
 ---
@@ -28,13 +33,13 @@ numa **planilha do Google Sheets** — sem banco de dados e sem servidor.
 
 ### 2. Ligar o convite à planilha
 
-Abra `index.html`, e no início do `<script>` cole a URL na constante:
+Abra `scripts/config.js` e cole a URL em `appsScriptUrl`:
 
 ```js
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfy.../exec";
+appsScriptUrl: "https://script.google.com/macros/s/AKfy.../exec",
 ```
 
-Enquanto essa constante estiver **vazia**, o convite funciona em **modo demonstração**:
+Enquanto esse valor estiver **vazio**, o convite funciona em **modo demonstração**:
 mostra a tela de sucesso, mas **não grava nada** (útil pra testar o visual).
 
 ### 3. Hospedar
@@ -72,7 +77,9 @@ O botão **"Salvar no calendário"** gera um arquivo `.ics` com esses dados.
 
 ## Personalização rápida
 
-- **Cores:** variáveis CSS no topo do `<style>` (`--sage`, `--alice`, `--rose`…).
+- **Cores:** variáveis CSS em `styles/tokens.css` (`--sage`, `--alice`, `--rose`…).
 - **Textos:** direto no HTML de cada seção.
 - **Fontes:** Fraunces (títulos) + Newsreader (corpo), via Google Fonts.
+- **Calendário:** dados do arquivo `.ics` em `scripts/config.js`.
+- **Formulário:** lógica de envio em `scripts/rsvp.js`; validação em `scripts/validation.js`.
 - **Menos animação:** o site respeita automaticamente `prefers-reduced-motion`.
