@@ -1,15 +1,12 @@
-# O Chá da Alice — Convite interativo 🫖
+# O Chá da Alice — Convite interativo
 
 Convite de chá de bebê com tema *Alice no País das Maravilhas*, 100% responsivo
 (feito para abrir no celular), com confirmação de presença (RSVP) gravada direto
 numa **planilha do Google Sheets** — sem banco de dados e sem servidor.
 
-- **`index.html`** — estrutura e textos do convite.
-- **`styles/main.css`** — índice dos arquivos de estilo, via `@import`.
-- **`styles/*.css`** — estilos por área: base, tipografia, hero, detalhes, RSVP, rodapé etc.
+- **`index.html`** — export do Claude Design, agora como página principal do convite.
+- **`support.js`** e **`image-slot.js`** — runtime do export do Claude.
 - **`scripts/config.js`** — dados fáceis de alterar, como URL do Apps Script e calendário.
-- **`scripts/app.js`** — inicializa o convite.
-- **`scripts/*.js`** — comportamento separado por responsabilidade: telefone, efeitos, acompanhantes, RSVP, calendário e validação.
 - **`apps-script/Code.gs`** — o script que grava as confirmações na sua planilha.
 
 ---
@@ -29,7 +26,7 @@ numa **planilha do Google Sheets** — sem banco de dados e sem servidor.
 7. Copie a **URL do app da Web** (termina em `/exec`).
 
 > A aba `Confirmações` é criada sozinha no primeiro envio, com as colunas:
-> Data/Hora · Nome · WhatsApp · WhatsApp (formatado) · Confirmações.
+> Data/Hora · Nome · WhatsApp · WhatsApp (formatado) · Confirmações · Recado.
 
 ### 2. Ligar o convite à planilha
 
@@ -49,7 +46,7 @@ mostra a tela de sucesso, mas **não grava nada** (útil pra testar o visual).
 - **Vercel / Netlify:** arraste a pasta na interface, ou `vercel` / `netlify deploy`.
 - **GitHub Pages:** suba o `index.html` num repositório e ative Pages.
 
-Depois é só mandar o link no WhatsApp. 🎉
+Depois é só mandar o link no WhatsApp.
 
 ---
 
@@ -77,9 +74,9 @@ O botão **"Salvar no calendário"** gera um arquivo `.ics` com esses dados.
 
 ## Personalização rápida
 
-- **Cores:** variáveis CSS em `styles/tokens.css` (`--sage`, `--alice`, `--rose`…).
+- **Cores e visual:** direto no export em `index.html`.
 - **Textos:** direto no HTML de cada seção.
-- **Fontes:** Fraunces (títulos) + Newsreader (corpo), via Google Fonts.
-- **Calendário:** dados do arquivo `.ics` em `scripts/config.js`.
-- **Formulário:** lógica de envio em `scripts/rsvp.js`; validação em `scripts/validation.js`.
+- **Fontes:** Cormorant Garamond, EB Garamond, Jost e Pinyon Script, via Google Fonts.
+- **Calendário:** lógica no componente exportado em `index.html`.
+- **Formulário:** lógica de envio no componente exportado em `index.html`; URL do Sheets em `scripts/config.js`.
 - **Menos animação:** o site respeita automaticamente `prefers-reduced-motion`.

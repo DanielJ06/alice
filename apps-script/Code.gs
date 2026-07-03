@@ -14,7 +14,7 @@
  *      - Executar como:  Eu (sua conta)
  *      - Quem tem acesso:  Qualquer pessoa
  * 6. Copie a URL que termina em /exec.
- * 7. Cole essa URL na constante APPS_SCRIPT_URL do arquivo index.html.
+ * 7. Cole essa URL em appsScriptUrl no arquivo scripts/config.js.
  *
  * A cada mudança no código, use  Implantar → Gerenciar implantações → Editar (lápis)
  * → Versão: Nova versão, para publicar a atualização.
