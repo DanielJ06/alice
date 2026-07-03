@@ -12,13 +12,13 @@
 <script src="./scripts/config.js"></script>
 <style>
   :root {
-    --canvas:#08281B; --ink:#0A3323; --paper:#F7F4D5; --moss:#839958;
+    --canvas:#35597A; --ink:#416688; --paper:#F7F4D5; --moss:#E0C274;
     --rose:#D3968C; --rose-bright:#E7B2A8; --rose-deep:#BE7E71;
     --display:'Cormorant Garamond', serif;
     --body:'EB Garamond', serif;
     --label:'Jost', sans-serif;
-    --line: rgba(10,51,35,.14);
-    --ink-soft: rgba(10,51,35,.62);
+    --line: rgba(65,102,136,.16);
+    --ink-soft: rgba(65,102,136,.66);
   }
   * { box-sizing: border-box; }
   html, body { margin:0; padding:0; }
@@ -52,7 +52,7 @@
 
   /* ===== HEADER ===== */
   header {
-    background: var(--ink);
+    background: radial-gradient(125% 95% at 50% 2%, #5A83AD 0%, #47709A 40%, var(--ink) 100%);
     color: var(--paper);
     text-align: center;
     padding: 40px 30px 34px;
@@ -104,7 +104,7 @@
     border-radius: 100px; padding: 12px 16px 12px 40px; outline: none;
     transition: border-color .2s cubic-bezier(.2,0,0,1), background .2s;
   }
-  #search::placeholder { color: rgba(10,51,35,.4); }
+  #search::placeholder { color: rgba(65,102,136,.4); }
   #search:focus { border-color: var(--rose); background:#fff; }
 
   .meta-row {
@@ -167,7 +167,7 @@
   }
   @media (hover:hover){ .wa:hover { color: var(--ink); } }
   .wa svg { flex-shrink:0; }
-  .stamp { font-family: var(--label); font-size: 11px; color: rgba(10,51,35,.45); letter-spacing:.03em; margin-left:auto; }
+  .stamp { font-family: var(--label); font-size: 11px; color: rgba(65,102,136,.45); letter-spacing:.03em; margin-left:auto; }
 
   .recado {
     margin-top: 13px; padding: 12px 14px 12px 16px;
@@ -178,7 +178,7 @@
   .recado .who { font-style: normal; font-family: var(--label); font-size: 10px; text-transform: uppercase; letter-spacing:.16em; color: var(--rose-deep); display:block; margin-bottom: 4px; }
 
   .entry.removed { opacity: .5; }
-  .entry.removed .entry-name { text-decoration: line-through; text-decoration-color: rgba(10,51,35,.35); }
+  .entry.removed .entry-name { text-decoration: line-through; text-decoration-color: rgba(65,102,136,.35); }
 
   /* toggle removidos */
   .removed-toggle {
@@ -244,7 +244,7 @@
 
   <div class="toolbar" id="toolbar" hidden>
     <div class="search-wrap">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A3323" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#416688" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="search" type="search" inputmode="search" placeholder="Buscar por nome, telefone…" autocomplete="off">
     </div>
   </div>
