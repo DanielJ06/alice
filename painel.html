@@ -158,6 +158,14 @@
     border-top: 1px dashed var(--line);
   }
   .companions li .diamond { width:5px; height:5px; transform:rotate(45deg); background: var(--moss); flex-shrink:0; }
+  .companions li .tag {
+    margin-left: auto;
+    font-family: var(--label);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--moss);
+  }
 
   .entry-foot { display:flex; align-items:center; flex-wrap:wrap; gap:8px 14px; margin-top: 14px; }
   .wa {
@@ -240,6 +248,7 @@
 
   <div class="stats" id="stats" hidden>
     <div class="stat"><b id="st-pessoas">–</b><small>Convidados confirmados</small></div>
+    <div class="stat"><b id="st-criancas">–</b><small>Crianças</small></div>
   </div>
 
   <div class="toolbar" id="toolbar" hidden>
@@ -382,7 +391,8 @@
 
     var comps = companions.length
       ? '<ul class="companions">' + companions.map(function (c) {
-          return '<li><span class="diamond"></span>' + esc(c.nome) + '</li>';
+          var tag = c.tipo === 'Criança' ? '<span class="tag">criança</span>' : '';
+          return '<li><span class="diamond"></span>' + esc(c.nome) + tag + '</li>';
         }).join('') + '</ul>'
       : '';
 
@@ -440,10 +450,14 @@
 
   function computeStats() {
     var pessoas = 0;
+    var criancas = 0;
     state.groups.forEach(function (g) {
-      pessoas += g.people.filter(function (p) { return p.status !== 'Removido'; }).length;
+      var activePeople = g.people.filter(function (p) { return p.status !== 'Removido'; });
+      pessoas += activePeople.length;
+      criancas += activePeople.filter(function (p) { return p.tipo === 'Criança'; }).length;
     });
     document.getElementById('st-pessoas').textContent = pessoas;
+    document.getElementById('st-criancas').textContent = criancas;
   }
 
   function onData(data) {

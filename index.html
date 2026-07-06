@@ -178,6 +178,10 @@
               opacity: 0.7;
             }
           }
+          .btn-add-guest:disabled {
+            cursor: not-allowed !important;
+            opacity: 0.52;
+          }
 
           /* === Scroll reveals — entrada escalonada === */
           /* data-reveal — fade + slide (não usar em elementos com mix-blend-mode) */
@@ -1487,6 +1491,7 @@
                 <!-- Acompanhantes -->
                 <sc-for list="{{ extra }}" as="g" hint-placeholder-count="0">
                   <div
+                    data-role="ac-card"
                     style="
                       margin-top: 30px;
                       padding-top: 22px;
@@ -1563,6 +1568,34 @@
                     <div>
                       <label
                         style="
+                          display: flex;
+                          align-items: center;
+                          gap: 9px;
+                          width: fit-content;
+                          font-family: &quot;EB Garamond&quot;;
+                          font-size: 16px;
+                          color: var(--paper);
+                          margin: 0 0 16px;
+                          cursor: pointer;
+                        "
+                      >
+                        <input
+                          data-role="ac-child"
+                          type="checkbox"
+                          onChange="{{ onChildToggle }}"
+                          style="
+                            width: 16px;
+                            height: 16px;
+                            accent-color: var(--rose);
+                            cursor: pointer;
+                          "
+                        />
+                        Criança sem WhatsApp
+                      </label>
+                    </div>
+                    <div data-role="ac-whats-wrap">
+                      <label
+                        style="
                           display: block;
                           font-family: &quot;Jost&quot;, sans-serif;
                           text-transform: uppercase;
@@ -1601,6 +1634,8 @@
                   type="button"
                   class="btn-add-guest"
                   onClick="{{ addGuest }}"
+                  disabled="{{ guestLimitReached }}"
+                  aria-disabled="{{ guestLimitReached }}"
                   style="
                     display: block;
                     margin: 26px auto 0;
@@ -1614,7 +1649,7 @@
                     padding: 6px;
                   "
                 >
-                  ＋ adicionar acompanhante
+                  {{ guestAddLabel }}
                 </button>
 
                 <div style="margin-top: 34px">
@@ -1925,6 +1960,7 @@
       class Component extends DCLogic {
         constructor(props) {
           super(props);
+          this.maxGuests = 4;
           this.state = { extra: [], submitted: false, submitting: false, error: '', confirmName: '', summary: '', cd: { d: '00', h: '00', m: '00', s: '00' } };
           this.formRef = React.createRef();
           this._uid = 0;
@@ -1974,8 +2010,8 @@
           this.setState({ cd: { d: String(d), h: this.pad(h), m: this.pad(m), s: this.pad(s) } });
         }
         addGuest() {
-          if (this.state.extra.length >= 10) {
-            this.setState({ error: 'Para grupos maiores, confirme com os papais pelo WhatsApp.' });
+          if (this.state.extra.length >= this.maxGuests) {
+            this.setState({ error: 'Cada confirmação pode incluir até 4 acompanhantes.' });
             return;
           }
           this.setState(st => ({ extra: [...st.extra, ++this._uid], error: '' }));
@@ -2008,6 +2044,16 @@
         onPhoneInput(e) {
           e.target.value = this.formatPhone(e.target.value);
           this.setFieldError(e.target, false);
+        }
+        onChildToggle(e) {
+          const card = e.target.closest('[data-role="ac-card"]');
+          const phoneWrap = card && card.querySelector('[data-role="ac-whats-wrap"]');
+          const phoneInput = card && card.querySelector('[data-role="ac-whats"]');
+          if (phoneWrap) phoneWrap.style.display = e.target.checked ? 'none' : '';
+          if (phoneInput) {
+            if (e.target.checked) phoneInput.value = '';
+            this.setFieldError(phoneInput, false);
+          }
         }
         setFieldError(input, hasError) {
           if (!input) return;
@@ -2126,36 +2172,46 @@
           const pushPerson = (personName, phone, note, role) => {
             const key = this.phoneKey(phone);
             people.push({ nome: this.cleanName(personName), whatsapp: key, role, ...(note ? { recado: note } : {}) });
-            seen.add(key);
+            if (key) seen.add(key);
           };
 
           if (ok) pushPerson(nome, whats, recado, 'principal');
 
           const guestNames = [...f.querySelectorAll('[data-role="ac-nome"]')];
           const guestPhones = [...f.querySelectorAll('[data-role="ac-whats"]')];
+          const guestChildren = [...f.querySelectorAll('[data-role="ac-child"]')];
           const acs = [];
+          if (guestNames.length > this.maxGuests) {
+            ok = false;
+          }
           guestNames.forEach((nameInput, index) => {
             const phoneInput = guestPhones[index];
+            const isChild = !!guestChildren[index]?.checked;
             const guestName = this.cleanName(nameInput.value || '');
             const guestPhone = phoneInput?.value || '';
             const guestKey = this.phoneKey(guestPhone);
             if (nameInput) nameInput.value = guestName;
             if (phoneInput) phoneInput.value = this.formatPhone(guestPhone);
             if (!guestName && !guestKey) return;
-            const guestInvalid = guestName.length < 3 || !this.validPhone(guestPhone) || seen.has(guestKey);
+            const phoneInvalid = !isChild && (!this.validPhone(guestPhone) || seen.has(guestKey));
+            const guestInvalid = guestName.length < 3 || phoneInvalid;
             this.setFieldError(nameInput, guestName.length < 3);
-            this.setFieldError(phoneInput, !this.validPhone(guestPhone) || seen.has(guestKey));
+            this.setFieldError(phoneInput, phoneInvalid);
             if (guestInvalid) {
               ok = false;
               return;
             }
             acs.push(guestName);
-            pushPerson(guestName, guestPhone, '', 'acompanhante');
+            if (isChild) {
+              people.push({ nome: guestName, whatsapp: '', role: 'crianca' });
+            } else {
+              pushPerson(guestName, guestPhone, '', 'acompanhante');
+            }
           });
 
           if (!ok) {
             this._submitting = false;
-            this.setState({ error: 'Alguns campos precisam de atenção. Confira nome, WhatsApp e números repetidos.' });
+            this.setState({ error: guestNames.length > this.maxGuests ? 'Cada confirmação pode incluir até 4 acompanhantes.' : 'Alguns campos precisam de atenção. Confira nome, WhatsApp e números repetidos.' });
             const firstInvalid = f.querySelector('[aria-invalid="true"]');
             if (firstInvalid) firstInvalid.focus();
             return;
@@ -2204,6 +2260,9 @@
             cd: this.state.cd,
             extra: this.state.extra.map(id => ({ id, remove: () => this.removeGuest(id) })),
             addGuest: () => this.addGuest(),
+            guestLimitReached: this.state.extra.length >= this.maxGuests,
+            guestAddLabel: this.state.extra.length >= this.maxGuests ? 'Limite de 4 acompanhantes' : '＋ adicionar acompanhante',
+            onChildToggle: (e) => this.onChildToggle(e),
             onSubmit: (e) => this.onSubmit(e),
             submitted: this.state.submitted,
             notSubmitted: !this.state.submitted,

@@ -55,6 +55,8 @@ Depois é só mandar o link no WhatsApp.
 
 - Cada pessoa (o convidado principal **e** cada acompanhante) vira **uma linha**.
 - O número de WhatsApp é normalizado (só dígitos) e usado como chave.
+- Crianças podem ser marcadas como **criança sem WhatsApp**. Nesse caso, o
+  backend grava uma chave interna estável e `Tipo = Criança`, sem exigir número.
 - Se o mesmo número confirmar de novo, o script **atualiza** a linha existente,
   incrementa a coluna **Confirmações** e não cria duplicata.
 - Se alguém editar a resposta e remover um acompanhante, a linha antiga fica com

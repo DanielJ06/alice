@@ -36,7 +36,8 @@ var HEADERS = [
   'Status',
   'Última ação'
 ];
-var MAX_PEOPLE = 12;
+var MAX_GUESTS = 4;
+var MAX_PEOPLE = MAX_GUESTS + 1; // convidado principal + acompanhantes
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -48,16 +49,17 @@ function doPost(e) {
     }
 
     var body = JSON.parse(e.postData.contents || '{}');
-    var people = normalizePeople(body.people);
-    var groupId = normalizeGroupId(body.responseId) || 'phone:' + people[0].whatsapp;
+    var requestedGroupId = normalizeGroupId(body.responseId);
+    var people = normalizePeople(body.people, requestedGroupId);
+    var groupId = requestedGroupId || 'phone:' + people[0].whatsapp;
 
     var sheet = getSheet();
     var cols = headerMap(sheet);
     var data = sheet.getDataRange().getValues(); // inclui cabeçalho
-    var indexByPhone = {}; // whatsapp (dígitos) -> número da linha (1-based)
+    var indexByPhone = {}; // chave da pessoa -> número da linha (1-based)
     var rowsInGroup = [];
     for (var r = 1; r < data.length; r++) {
-      var key = String(data[r][cols['WhatsApp']] || '').replace(/\D/g, '');
+      var key = recordKey(data[r][cols['WhatsApp']] || '');
       if (key) indexByPhone[key] = r + 1;
       if (String(data[r][cols['Grupo']] || '') === groupId) rowsInGroup.push(r + 1);
     }
@@ -67,10 +69,11 @@ function doPost(e) {
     var incomingPhones = {};
 
     people.forEach(function (p, index) {
-      incomingPhones[p.whatsapp] = true;
+      var personKey = recordKey(p.whatsapp);
+      incomingPhones[personKey] = true;
 
-      if (indexByPhone[p.whatsapp]) {
-        var row = indexByPhone[p.whatsapp];
+      if (indexByPhone[personKey]) {
+        var row = indexByPhone[personKey];
         var current = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
         var count = Number(current[cols['Confirmações']]) || 0;
         var keepRecado = p.recado || String(current[cols['Recado']] || '');
@@ -82,7 +85,7 @@ function doPost(e) {
           'Confirmações': count + 1,
           'Recado': keepRecado,
           'Grupo': groupId,
-          'Tipo': index === 0 ? 'Principal' : 'Acompanhante',
+          'Tipo': p.tipo,
           'Status': 'Confirmado',
           'Última ação': 'Atualizado'
         });
@@ -96,11 +99,11 @@ function doPost(e) {
           'Confirmações': 1,
           'Recado': p.recado,
           'Grupo': groupId,
-          'Tipo': index === 0 ? 'Principal' : 'Acompanhante',
+          'Tipo': p.tipo,
           'Status': 'Confirmado',
           'Última ação': 'Criado'
         });
-        indexByPhone[p.whatsapp] = sheet.getLastRow();
+        indexByPhone[personKey] = sheet.getLastRow();
         added++;
       }
     });
@@ -158,7 +161,7 @@ function listConfirmations() {
 
     groups[groupId].people.push({
       nome: nome,
-      whatsapp: String(row[cols['WhatsApp']] || '').replace(/\D/g, ''),
+      whatsapp: recordKey(row[cols['WhatsApp']] || ''),
       pretty: String(row[cols['WhatsApp (formatado)']] || ''),
       confirmacoes: Number(row[cols['Confirmações']]) || 0,
       recado: String(row[cols['Recado']] || '').trim(),
@@ -249,7 +252,7 @@ function markRemovedGuests(sheet, cols, rowsInGroup, incomingPhones, now) {
   var removed = 0;
   rowsInGroup.forEach(function (rowNumber) {
     var current = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var phone = String(current[cols['WhatsApp']] || '').replace(/\D/g, '');
+    var phone = recordKey(current[cols['WhatsApp']] || '');
     var status = String(current[cols['Status']] || '');
     if (!phone || incomingPhones[phone] || status === 'Removido') return;
     writeKnownColumns(sheet, rowNumber, cols, current, {
@@ -262,30 +265,59 @@ function markRemovedGuests(sheet, cols, rowsInGroup, incomingPhones, now) {
   return removed;
 }
 
-function normalizePeople(rawPeople) {
+function normalizePeople(rawPeople, groupId) {
   if (!Array.isArray(rawPeople) || rawPeople.length === 0) {
     throw new Error('Nenhum convidado recebido');
   }
   if (rawPeople.length > MAX_PEOPLE) {
-    throw new Error('Muitos convidados no mesmo envio');
+    throw new Error('Cada confirmação pode incluir até ' + MAX_GUESTS + ' acompanhantes');
   }
 
   var seen = {};
+  var mainPhone = normalizePhone((rawPeople[0] || {}).whatsapp);
+  if (!validPhone(mainPhone)) throw new Error('WhatsApp inválido no convidado 1');
+  var groupKey = groupId || 'phone:' + mainPhone;
+  var childKeys = {};
   return rawPeople.map(function (p, index) {
     p = p || {};
     var nome = sanitizeText(p.nome, 80).replace(/\s+/g, ' ').trim();
-    var phone = normalizePhone(p.whatsapp);
+    var role = String(p.role || '').toLowerCase();
+    var isChild = index > 0 && (role === 'crianca' || role === 'criança');
+    var phone = isChild ? '' : normalizePhone(p.whatsapp);
     if (nome.length < 3) throw new Error('Nome inválido no convidado ' + (index + 1));
-    if (!validPhone(phone)) throw new Error('WhatsApp inválido no convidado ' + (index + 1));
+    if (isChild) {
+      phone = uniqueChildKey(groupKey, nome, childKeys);
+    } else if (!validPhone(phone)) {
+      throw new Error('WhatsApp inválido no convidado ' + (index + 1));
+    }
     if (seen[phone]) throw new Error('WhatsApp repetido no envio');
     seen[phone] = true;
     return {
       nome: protectFormula(nome),
       whatsapp: phone,
-      pretty: formatBR(phone),
+      pretty: isChild ? 'Criança sem WhatsApp' : formatBR(phone),
+      tipo: index === 0 ? 'Principal' : (isChild ? 'Criança' : 'Acompanhante'),
       recado: protectFormula(sanitizeText(p.recado, 500).trim())
     };
   });
+}
+
+function uniqueChildKey(groupKey, nome, childKeys) {
+  var base = String(nome || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  if (!base) base = 'crianca';
+  var key = 'child:' + groupKey + ':' + base;
+  var count = childKeys[key] || 0;
+  childKeys[key] = count + 1;
+  return count ? key + '-' + (count + 1) : key;
+}
+
+function recordKey(value) {
+  var raw = String(value || '').trim();
+  if (raw.indexOf('child:') === 0) return raw;
+  return raw.replace(/\D/g, '');
 }
 
 function normalizePhone(value) {
